@@ -1,19 +1,20 @@
 <template>
   <v-app dark>
     <!-- drawer -->
-    <v-navigation-drawer v-model="drawer" fixed app></v-navigation-drawer>
+    <v-navigation-drawer v-if="!!currentDomain" v-model="drawer" fixed app></v-navigation-drawer>
 
     <!-- navbar -->
     <v-app-bar fixed app>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-app-bar-nav-icon :disabled="!currentDomain" @click.stop="drawer = !drawer" />
 
       <!-- domain -->
       <v-spacer class="pull-right" />
       <v-menu offset-y>
         <!-- activator -->
         <template #activator="{ on, attrs }">
-          <v-btn v-bind="attrs" text v-on="on">
-            {{ currentDomain?.domain || '???' }}
+          <v-btn v-bind="attrs" text v-on="on" >
+            <span v-if="!currentDomain" class="text--disabled">{{ $t('domains.select') }}</span>
+            <span v-else>{{ currentDomain?.domain }}</span>
             <v-icon right>mdi-menu-down</v-icon>
           </v-btn>
         </template>
@@ -26,10 +27,18 @@
       <nav-profile />
     </v-app-bar>
 
-    <!-- main content -->
-    <v-main>
-      <v-container>
-        <Nuxt />
+    <v-main class="background">
+      <v-container fluid class="mt-4">
+        <!-- for domain selection -->
+        <div v-if="!currentDomain">
+          <h1 class="v-heading text-center">{{ $t('domains.select') }}</h1>
+          <v-card class="mx-auto mb-3" outlined>
+            <domains-list />
+          </v-card>
+        </div>
+
+        <!-- main content -->
+        <Nuxt v-else />
       </v-container>
     </v-main>
   </v-app>
