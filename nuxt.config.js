@@ -26,7 +26,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ['~/plugins/vuetify', '~/store/index'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -41,10 +41,11 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    '@nuxtjs/axios',
+    'cookie-universal-nuxt',
     '@nuxtjs/auth-next',
-    '@nuxtjs/pwa',
+    '@nuxtjs/axios',
     '@nuxtjs/i18n',
+    '@nuxtjs/pwa',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -57,7 +58,7 @@ export default {
     strategies: {
       cognito: {
         scheme: 'openIDConnect',
-        clientId: '44osvvfl20jem9nrvlii8qjepj',
+        clientId: '24jot6kfr6648ihq4dtqhum1rb',
         endpoints: {
           configuration: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_wWJ25Mayx/.well-known/openid-configuration'
         },
