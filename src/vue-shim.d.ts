@@ -1,3 +1,4 @@
+import { Store } from 'vuex'
 import { NuxtCookies } from 'cookie-universal-nuxt'
 
 declare module "*.vue" {
@@ -8,5 +9,6 @@ declare module "*.vue" {
 declare module 'vue/types/vue' {
   interface Vue {
     $cookies: NuxtCookies
+    $store: Store<any>
   }
 }
