@@ -12,10 +12,10 @@
     </v-list-item>
 
     <!-- available domains -->
-    <v-divider v-if="!loading" />
-    <v-list-item-group v-if="!loading" :value="currentDomain?.id">
+    <v-divider />
+    <v-list-item-group :value="currentDomain?.id">
       <template v-for="(domain, index) in allDomains">
-        <v-list-item :key="domain.id" @click="setDomain(domain.id)">
+        <v-list-item :key="domain.id" nuxt :to="`/${domain.id}`">
             <v-list-item-content class="my-2">
               <v-list-item-title>{{ domain.domain }}</v-list-item-title>
             </v-list-item-content>
@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { Domain, DomainID } from '../types/domain'
+import { Domain } from '../types/domain'
 export default {
   name: 'DomainsList',
 
@@ -52,10 +52,6 @@ export default {
   },
 
   methods: {
-    setDomain(id: DomainID) {
-      this.$router.push(`/${id}`)
-    },
-
     async refreshDomains() {
       this.loading = true
       await this.$store.dispatch('domains/refresh')

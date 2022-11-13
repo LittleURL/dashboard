@@ -3,7 +3,7 @@ import VuexPersistence from 'vuex-persist'
 
 const persistedStores = ['domains']
 
-const plugin: Plugin = ({ store }) => {
+const vuexPersistPlugin: Plugin = ({ store }) => {
   for (const persistedStore of persistedStores) {
     new VuexPersistence({
       key: persistedStore,
@@ -11,4 +11,4 @@ const plugin: Plugin = ({ store }) => {
     }).plugin(store)
   }
 }
-export default plugin
+export default vuexPersistPlugin

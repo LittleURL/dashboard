@@ -1,3 +1,6 @@
 export default {
-  select: 'Select Domain'
+  domains: 'Domains',
+  select: 'Select Domain',
+  settings: 'Domain settings',
+  links: 'Links'
 }
