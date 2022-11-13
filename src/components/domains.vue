@@ -1,5 +1,5 @@
 <template>
-  <v-list>
+  <v-list class="py-0">
     <!-- actions -->
     <v-list-item>
       <v-btn left text color="primary" tile>
@@ -16,9 +16,9 @@
     <v-list-item-group v-if="!loading" :value="currentDomain?.id">
       <template v-for="(domain, index) in allDomains">
         <v-list-item :key="domain.id" @click="setDomain(domain.id)">
-          <v-list-item-content class="my-2">
-            <v-list-item-title>{{ domain.domain }}</v-list-item-title>
-          </v-list-item-content>
+            <v-list-item-content class="my-2">
+              <v-list-item-title>{{ domain.domain }}</v-list-item-title>
+            </v-list-item-content>
         </v-list-item>
         <v-divider v-if="index < allDomains.length - 1" :key="index" />
       </template>
@@ -39,16 +39,21 @@ export default {
 
   computed: {
     currentDomain(): Domain | undefined {
-      return this.$store.getters['domains/current']
+      const { domainId } = this.$route.params
+      return this.$store.getters['domains/current'](domainId)
     },
     allDomains(): Domain[] {
       return this.$store.getters['domains/all']
     },
   },
 
+  async mounted() {
+    await this.refreshDomains()
+  },
+
   methods: {
     setDomain(id: DomainID) {
-      this.$store.commit('domains/setCurrent', id)
+      this.$router.push(`/${id}`)
     },
 
     async refreshDomains() {

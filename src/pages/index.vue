@@ -1,59 +1,17 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="12">
-      <v-card class="mx-auto mb-3">
-        <v-card-title>auth: {{ $auth.loggedIn }}</v-card-title>
-        <v-card-actions>
-          <v-btn @click="login">{{ $t('auth.login') }}</v-btn>
-          <v-btn @click="login">{{ $t('auth.logout') }}</v-btn>
-        </v-card-actions>
-      </v-card>
-
-      <v-card class="mx-auto mb-3">
-        <v-card-title>Access Token</v-card-title>
-        <v-card-text>
-          <v-textarea v-model="token" readonly></v-textarea>
-        </v-card-text>
-      </v-card>
-
-      <v-card class="mx-auto mb-3">
-        <v-card-title>ID Token</v-card-title>
-        <v-card-text>
-          <v-textarea v-model="idToken" readonly></v-textarea>
-        </v-card-text>
-      </v-card>
-    </v-col>
-  </v-row>
+  <div>
+    <h1 class="v-heading text-center">{{ $t('domains.select') }}</h1>
+    <v-card class="mx-auto mb-3 pb-0" outlined>
+      <domains-list />
+    </v-card>
+  </div>
 </template>
 
-<script>
+<script lang="ts">
+import DomainsList from '~/components/domains.vue'
+
 export default {
-  name: 'IndexPage',
-  computed: {
-    token() {
-      try {
-        return this.$auth.strategy.token.get().replace(/^Bearer /, '')
-      } catch (error) {
-        console.warn(error)
-        return ''
-      }
-    },
-    idToken() {
-      try {
-        return this.$auth.strategy.idToken.get().replace(/^Bearer /, '')
-      } catch (error) {
-        console.warn(error)
-        return ''
-      }
-    },
-  },
-  methods: {
-    login() {
-      this.$auth.login()
-    },
-    logout() {
-      this.$auth.logout()
-    },
-  },
+  name: 'DefaultLayout',
+  components: { DomainsList },
 }
 </script>

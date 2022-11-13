@@ -27,18 +27,10 @@
       <nav-profile />
     </v-app-bar>
 
+    <!-- main content -->
     <v-main class="background">
       <v-container fluid class="mt-4">
-        <!-- for domain selection -->
-        <div v-if="!currentDomain">
-          <h1 class="v-heading text-center">{{ $t('domains.select') }}</h1>
-          <v-card class="mx-auto mb-3" outlined>
-            <domains-list />
-          </v-card>
-        </div>
-
-        <!-- main content -->
-        <Nuxt v-else />
+        <Nuxt />
       </v-container>
     </v-main>
   </v-app>
@@ -61,8 +53,13 @@ export default {
 
   computed: {
     currentDomain(): Domain | undefined {
-      return this.$store.getters['domains/current']
+      const { domainId } = this.$route.params
+      return this.$store.getters['domains/current'](domainId)
     },
   },
+
+  async mounted() {
+    await this.$store.dispatch('domains/refresh')
+  }
 }
 </script>
