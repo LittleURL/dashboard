@@ -1,4 +1,20 @@
+locals {
+  zone_id          = data.cloudflare_zone.default.id
+  domain           = data.cloudflare_zone.default.name
+  domain_dashboard = "dashboard.${local.domain}"
+}
 
+data "aws_ssm_parameter" "cloudflare_zone" {
+  name = "/${var.application}/cloudflare-zone"
+}
+
+data "cloudflare_zone" "default" {
+  zone_id = data.aws_ssm_parameter.cloudflare_zone.value
+}
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Records
+# ----------------------------------------------------------------------------------------------------------------------
 resource "cloudflare_record" "dashboard" {
   zone_id = local.zone_id
   name    = local.domain_dashboard

@@ -1,10 +1,7 @@
 locals {
-  prefix      = "${var.application}-"
-  environment = contains(var.environments, terraform.workspace) ? terraform.workspace : "dev"
-  aws_account = lookup(var.aws_accounts, local.environment)
-  zone_id    = data.cloudflare_zone.default.id
-  domain     = data.cloudflare_zone.default.name
-  domain_dashboard = "dashboard.${local.domain}"
+  prefix           = "${var.application}-"
+  environment      = contains(var.environments, terraform.workspace) ? terraform.workspace : "dev"
+  aws_account      = lookup(var.aws_accounts, local.environment)
 }
 
 variable "application" {
@@ -28,7 +25,7 @@ variable "aws_region" {
 
 variable "aws_role" {
   type    = string
-  default = "deploy-api"
+  default = "deploy-dashboard"
 }
 
 variable "aws_accounts" {
@@ -44,7 +41,7 @@ variable "aws_default_tags" {
   description = "Common resource tags for all AWS resources"
   default = {
     application = "LittleURL"
-    service     = "dashbaord"
+    service     = "dashboard"
   }
 }
 
