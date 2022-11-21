@@ -1,8 +1,9 @@
+<!-- eslint-disable vue/valid-v-slot -->
 <template>
   <div>
     <!-- header -->
     <page-header
-      :back-text="$t('domains.domains')"
+      :back-text="String($t('domains.domains'))"
       back-to="/"
       :title="currentDomain?.domain"
     >
@@ -61,18 +62,15 @@
         </template>
 
         <!-- updated -->
-        <template v-slot:item.updated_at="{ item }">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <span v-bind="attrs" v-on="on">{{ item.updated_at | timeRelative }}</span>
-            </template>
-          <span>{{ item.updated_at | timeLocaleFull }}</span>
-        </v-tooltip>
+        <template #item.updated_at="{ item }">
+          <relative-timestamp :ts="item.updated_at" />
         </template>
 
         <!-- item actions -->
-        <template v-slot:item.actions="{ item }">
-          <v-icon @click="">mdi-pencil</v-icon>
+        <template #item.actions="{ item }">
+          <NuxtLink :to="`${$route.path}/${linkId(item)}`">
+            <v-icon>mdi-pencil</v-icon>
+          </NuxtLink>
           <v-icon @click="$refs.confirmDelete.open(item, item.uri)">
             mdi-delete
           </v-icon>
@@ -86,11 +84,13 @@
 </template>
 
 <script lang="ts">
-import { DataTableHeader } from 'vuetify'
 import base64url from 'base64url'
 import { DateTime } from 'luxon'
-import PageHeader from '~/components/pageHeader.vue'
+import { DataTableHeader } from 'vuetify'
 import DeleteDialogue from '~/components/deleteDialogue.vue'
+import PageHeader from '~/components/pageHeader.vue'
+import RelativeTimestamp from '~/components/relativeTimestamp.vue'
+import { linkId } from '~/helpers'
 import { Domain, Link } from '~/types'
 
 type Data = {
@@ -104,29 +104,31 @@ type Data = {
 
 export default {
   name: 'LinksList',
-  components: { PageHeader, DeleteDialogue },
+  components: { PageHeader, DeleteDialogue, RelativeTimestamp },
 
   filters: {
-    timeRelative: (isoString: string) => DateTime.fromISO(isoString).toRelative(),
-    timeLocaleFull: (isoString: string) => DateTime.fromISO(isoString).toLocaleString(DateTime.DATETIME_FULL)
+    timeRelative: (isoString: string) =>
+      DateTime.fromISO(isoString).toRelative(),
+    timeLocaleFull: (isoString: string) =>
+      DateTime.fromISO(isoString).toLocaleString(DateTime.DATETIME_FULL),
   },
 
   data(): Data {
     return {
       headers: [
         {
-          text: this.$t('links.uri'),
+          text: this.$t('links.uri') as string,
           value: 'uri',
           sortable: true,
           align: 'start',
         },
         {
-          text: this.$t('links.updatedAt'),
+          text: this.$t('links.updatedAt') as string,
           value: 'updated_at',
           sortable: true,
         },
         {
-          text: this.$t('actions'),
+          text: this.$t('actions') as string,
           value: 'actions',
           sortable: false,
         },
@@ -164,6 +166,8 @@ export default {
   },
 
   methods: {
+    linkId,
+
     async deleteLink(uri: string) {
       const { domainId } = this.$route.params
       this.$refs.confirmDelete.pending()

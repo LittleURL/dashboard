@@ -1,6 +1,7 @@
-export type LinkID = string
+import { DomainID } from "./domain"
+
 export type Link = {
-  id: LinkID,
+  domain_id: DomainID,
   uri: string,
   target: string,
   description: string

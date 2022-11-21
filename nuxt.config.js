@@ -35,6 +35,7 @@ export default {
   plugins: [
     '~/plugins/vuetify',
     '~/plugins/validator',
+    '~/plugins/luxon',
     { src: '~/plugins/vuex-persist', mode: 'client' }
   ],
 
