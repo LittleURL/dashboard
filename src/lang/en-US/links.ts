@@ -1,5 +1,5 @@
 export default {
   create: 'Create Link',
-  uri: 'Path',
+  uri: 'URI',
   target: 'Target'
 }

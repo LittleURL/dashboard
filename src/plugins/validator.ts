@@ -5,17 +5,16 @@ import * as rules from 'vee-validate/dist/rules'
 const veeValidatePlugin: Plugin = ({ i18n }) => {
   // get messages from i18n
   configure({
-    defaultMessage: (field, values) => {
+    defaultMessage: (_field, values) => {
       // values._field_ = i18n.t(`fields.${field}`).toString()
       return i18n.t(`validation.${values._rule_}`, values).toString()
     },
   })
 
   // apply all available rules
-  Object.keys(rules).forEach(rule => {
-    // eslint-disable-next-line import/namespace
-    extend(rule, rules[rule]);
-  });
+  for (const [key, value] of Object.entries(rules)) {
+    extend(key, value);
+  }
 }
 
 export default veeValidatePlugin

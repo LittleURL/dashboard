@@ -43,7 +43,10 @@
         :items="links"
         :items-per-page="5"
         :loading="$fetchState.pending"
+        :sort-by.sync="sortBy"
+        :sort-desc.sync="sortDesc"
       >
+        <!-- search  -->
         <template #top>
           <v-card-actions>
             <v-text-field
@@ -52,42 +55,68 @@
               :label="$t('searchPrefix')"
               clearable
               autofocus
-            ></v-text-field>
+              @change="$fetch"
+            />
           </v-card-actions>
+        </template>
+
+        <!-- item actions -->
+        <template v-slot:item.actions="{ item }">
+          <v-icon @click="">mdi-pencil</v-icon>
+          <v-icon @click="$refs.confirmDelete.open(item, item.uri)">mdi-delete</v-icon>
         </template>
       </v-data-table>
     </v-card>
+
+    <!-- dialogues -->
+    <delete-dialogue ref="confirmDelete" @confirm="deleteLink" />
   </div>
 </template>
 
 <script lang="ts">
 import { DataTableHeader } from 'vuetify'
+import base64url from 'base64url'
 import PageHeader from '~/components/pageHeader.vue'
+import DeleteDialogue from '~/components/deleteDialogue.vue'
 import { Domain, Link } from '~/types'
+
 type Data = {
   headers: DataTableHeader[]
   links: Link[]
   prefix: string | undefined
+  sortBy: keyof Link
+  sortDesc: boolean
+  deleteDialogue: boolean
 }
+
 export default {
-  name: 'DomainShow',
-  components: { PageHeader },
+  name: 'LinksList',
+  components: { PageHeader, DeleteDialogue },
 
   data: (): Data => ({
     headers: [
       {
         text: 'Path',
-        align: 'start',
-        sortable: false,
         value: 'uri',
+        sortable: true,
+        align: 'start',
       },
       {
         text: 'Updated',
         value: 'updated_at',
+        sortable: true,
+      },
+      {
+        text: 'Actions',
+        value: 'actions',
+        sortable: false,
       },
     ],
     links: [],
     prefix: undefined,
+    sortBy: 'uri',
+    sortDesc: false,
+    deleteDialogue: false,
   }),
 
   fetchDelay: 500,
@@ -96,6 +125,8 @@ export default {
     this.links = await this.$axios.$get(`/domains/${domainId}/links`, {
       params: {
         ...(this.prefix && { prefix: encodeURIComponent(this.prefix) }),
+        ...(this.sortBy && { sortBy: this.sortBy }),
+        ...(this.sortDesc && { sortDesc: this.sortDesc }),
       },
     })
   },
@@ -108,7 +139,17 @@ export default {
   },
 
   watch: {
-    prefix: '$fetch',
+    sortBy: '$fetch',
+    sortDesc: '$fetch',
+  },
+
+  methods: {
+    async deleteLink(uri: string) {
+      const { domainId } = this.$route.params
+      this.$refs.confirmDelete.pending()
+      await this.$axios.$delete(`/domains/${domainId}/links/${base64url(uri)}`)
+      this.$refs.confirmDelete.close()
+    },
   },
 }
 </script>

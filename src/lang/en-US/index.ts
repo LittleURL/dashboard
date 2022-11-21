@@ -10,6 +10,9 @@ const root = {
   searchPrefix: 'Filter by prefix',
   example: 'Example',
   save: 'Save',
+  cancel: 'Cancel',
+  delete: 'Delete',
+  deleteConfirm: 'Are you sure you want to delete this item?'
 }
 
 export default {
