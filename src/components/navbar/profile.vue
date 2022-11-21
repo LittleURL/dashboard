@@ -26,12 +26,11 @@
 </template>
 
 <script lang="ts">
-import NavSettings from './settings'
-import { User } from '~/types/auth'
+import NavSettings from './settings.vue'
+import { User } from '~/types'
 export default {
   name: 'NavProfile',
   components: { NavSettings },
-  middleware: 'auth',
   computed: {
     isLoggedIn() {
       return this.$auth.loggedIn

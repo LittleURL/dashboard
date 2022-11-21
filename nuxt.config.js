@@ -118,7 +118,7 @@ export default {
           background: colors.grey.lighten3
         },
         dark: {
-          // background: colors.black,
+          background: colors.black
           // primary: colors.blue.darken2,
           // accent: colors.grey.darken3,
           // secondary: colors.amber.darken3,

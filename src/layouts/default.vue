@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app>
     <!-- drawer -->
     <v-navigation-drawer v-if="!!currentDomain" v-model="drawer" fixed app></v-navigation-drawer>
 
@@ -37,9 +37,9 @@
 </template>
 
 <script lang="ts">
-import { Domain } from '../types/domain'
-import NavProfile from '../components/auth/navbar/profile.vue'
-import DomainsList from '../components/domains.vue'
+import { Domain } from '~/types/domain'
+import NavProfile from '~/components/navbar/profile.vue'
+import DomainsList from '~/components/domains.vue'
 
 export default {
   name: 'DefaultLayout',
