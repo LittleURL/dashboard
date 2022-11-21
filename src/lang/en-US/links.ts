@@ -1,5 +1,6 @@
 export default {
   create: 'Create Link',
   uri: 'URI',
-  target: 'Target'
+  target: 'Target',
+  updatedAt: 'Updated'
 }

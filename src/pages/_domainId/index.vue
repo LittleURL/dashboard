@@ -60,10 +60,22 @@
           </v-card-actions>
         </template>
 
+        <!-- updated -->
+        <template v-slot:item.updated_at="{ item }">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <span v-bind="attrs" v-on="on">{{ item.updated_at | timeRelative }}</span>
+            </template>
+          <span>{{ item.updated_at | timeLocaleFull }}</span>
+        </v-tooltip>
+        </template>
+
         <!-- item actions -->
         <template v-slot:item.actions="{ item }">
           <v-icon @click="">mdi-pencil</v-icon>
-          <v-icon @click="$refs.confirmDelete.open(item, item.uri)">mdi-delete</v-icon>
+          <v-icon @click="$refs.confirmDelete.open(item, item.uri)">
+            mdi-delete
+          </v-icon>
         </template>
       </v-data-table>
     </v-card>
@@ -76,6 +88,7 @@
 <script lang="ts">
 import { DataTableHeader } from 'vuetify'
 import base64url from 'base64url'
+import { DateTime } from 'luxon'
 import PageHeader from '~/components/pageHeader.vue'
 import DeleteDialogue from '~/components/deleteDialogue.vue'
 import { Domain, Link } from '~/types'
@@ -93,31 +106,38 @@ export default {
   name: 'LinksList',
   components: { PageHeader, DeleteDialogue },
 
-  data: (): Data => ({
-    headers: [
-      {
-        text: 'Path',
-        value: 'uri',
-        sortable: true,
-        align: 'start',
-      },
-      {
-        text: 'Updated',
-        value: 'updated_at',
-        sortable: true,
-      },
-      {
-        text: 'Actions',
-        value: 'actions',
-        sortable: false,
-      },
-    ],
-    links: [],
-    prefix: undefined,
-    sortBy: 'uri',
-    sortDesc: false,
-    deleteDialogue: false,
-  }),
+  filters: {
+    timeRelative: (isoString: string) => DateTime.fromISO(isoString).toRelative(),
+    timeLocaleFull: (isoString: string) => DateTime.fromISO(isoString).toLocaleString(DateTime.DATETIME_FULL)
+  },
+
+  data(): Data {
+    return {
+      headers: [
+        {
+          text: this.$t('links.uri'),
+          value: 'uri',
+          sortable: true,
+          align: 'start',
+        },
+        {
+          text: this.$t('links.updatedAt'),
+          value: 'updated_at',
+          sortable: true,
+        },
+        {
+          text: this.$t('actions'),
+          value: 'actions',
+          sortable: false,
+        },
+      ],
+      links: [],
+      prefix: undefined,
+      sortBy: 'uri',
+      sortDesc: false,
+      deleteDialogue: false,
+    }
+  },
 
   fetchDelay: 500,
   async fetch() {

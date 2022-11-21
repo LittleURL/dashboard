@@ -9,6 +9,7 @@ const root = {
   reload: 'Reload',
   searchPrefix: 'Filter by prefix',
   example: 'Example',
+  actions: 'Actions',
   save: 'Save',
   cancel: 'Cancel',
   delete: 'Delete',
