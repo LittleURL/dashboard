@@ -28,6 +28,7 @@
 
 <script lang="ts">
 import { Domain } from '../types/domain'
+
 export default {
   name: 'DomainsList',
 

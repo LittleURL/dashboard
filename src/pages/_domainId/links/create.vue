@@ -2,16 +2,16 @@
   <div>
     <!-- header -->
     <page-header
-      :back-text="$t('domains.links')"
-      :back-to="`/${currentDomain.id}`"
-      :title="$t('links.create')"
+      :title="String($t('links.create'))"
+      :back-text="String($t('domains.links'))"
+      :back-to="`/${currentDomain.id}/links`"
     />
 
     <!-- content -->
     <v-card class="mx-auto mb-3 pb-0" outlined>
       <validation-observer
         ref="observer"
-        v-slot="{ invalid, validated, handleSubmit, validate }"
+        v-slot="{ invalid }"
       >
         <v-card-text>
           <v-form @submit.prevent="submit">
@@ -77,14 +77,12 @@
 
 <script lang="ts">
 import {
-  ValidationObserver,
-  ValidationProvider,
-  setInteractionMode,
+setInteractionMode, ValidationObserver,
+ValidationProvider
 } from 'vee-validate'
 import PageHeader from '~/components/pageHeader.vue'
 import { prefixString, successAlert } from '~/helpers'
 import { Domain } from '~/types'
-import { AlertType } from '~/types/alert'
 
 setInteractionMode('eager')
 

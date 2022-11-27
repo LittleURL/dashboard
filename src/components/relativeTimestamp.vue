@@ -1,6 +1,6 @@
 <template>
   <v-tooltip bottom>
-    <template v-slot:activator="{ on, attrs }">
+    <template #activator="{ on, attrs }">
       <span v-bind="attrs" v-on="on">{{ ts | luxonRelative }}</span>
     </template>
     <span>{{ ts | luxonLocaleFull }}</span>
