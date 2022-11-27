@@ -1,6 +1,6 @@
 import {
   exponentialDelay,
-  isNetworkOrIdempotentRequestError
+  isNetworkError
 } from 'axios-retry'
 import colors from 'vuetify/es5/util/colors'
 
@@ -36,6 +36,7 @@ export default {
     '~/plugins/vuetify',
     '~/plugins/validator',
     '~/plugins/luxon',
+    '~/plugins/axios',
     { src: '~/plugins/vuex-persist', mode: 'client' }
   ],
 
@@ -65,7 +66,7 @@ export default {
     retry: {
       retries: 3,
       retryDelay: exponentialDelay,
-      retryCondition: isNetworkOrIdempotentRequestError
+      retryCondition: isNetworkError
     }
   },
 

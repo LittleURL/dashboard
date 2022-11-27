@@ -1,4 +1,14 @@
 // Ref: https://github.com/nuxt-community/vuetify-module#customvariables
-//
-// The variables you want to modify
-// $font-size-root: 20px;
+
+@import '~vuetify/src/styles/styles.sass';
+@import '~vuetify/src/components/VDialog/_variables.scss';
+
+.v-dialog--active {
+  box-shadow: none;
+
+  .v-card:first-of-type {
+    box-shadow: map-get($shadow-key-umbra, $dialog-elevation),
+      map-get($shadow-key-penumbra, $dialog-elevation),
+      map-get($shadow-key-ambient, $dialog-elevation);
+  }
+}

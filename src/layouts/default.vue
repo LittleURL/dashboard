@@ -1,19 +1,29 @@
 <template>
   <v-app>
     <!-- drawer -->
-    <v-navigation-drawer v-if="!!currentDomain" v-model="drawer" fixed app></v-navigation-drawer>
+    <v-navigation-drawer
+      v-if="!!currentDomain"
+      v-model="drawer"
+      fixed
+      app
+    ></v-navigation-drawer>
 
     <!-- navbar -->
     <v-app-bar fixed app>
-      <v-app-bar-nav-icon :disabled="!currentDomain" @click.stop="drawer = !drawer" />
+      <v-app-bar-nav-icon
+        :disabled="!currentDomain"
+        @click.stop="drawer = !drawer"
+      />
 
       <!-- domain -->
       <v-spacer class="pull-right" />
       <v-menu offset-y>
         <!-- activator -->
         <template #activator="{ on, attrs }">
-          <v-btn v-bind="attrs" text v-on="on" >
-            <span v-if="!currentDomain" class="text--disabled">{{ $t('domains.select') }}</span>
+          <v-btn v-bind="attrs" text v-on="on">
+            <span v-if="!currentDomain" class="text--disabled">{{
+              $t('domains.select')
+            }}</span>
             <span v-else>{{ currentDomain?.domain }}</span>
             <v-icon right>mdi-menu-down</v-icon>
           </v-btn>
@@ -30,6 +40,7 @@
     <!-- main content -->
     <v-main class="background">
       <v-container fluid class="mt-4">
+        <global-alerts />
         <Nuxt />
       </v-container>
     </v-main>
@@ -37,13 +48,14 @@
 </template>
 
 <script lang="ts">
-import { Domain } from '~/types/domain'
-import NavProfile from '~/components/navbar/profile.vue'
 import DomainsList from '~/components/domains.vue'
+import GlobalAlerts from '~/components/globalAlerts.vue'
+import NavProfile from '~/components/navbar/profile.vue'
+import { Domain } from '~/types/domain'
 
 export default {
   name: 'DefaultLayout',
-  components: { NavProfile, DomainsList },
+  components: { NavProfile, GlobalAlerts, DomainsList },
 
   data() {
     return {
@@ -60,6 +72,6 @@ export default {
 
   async mounted() {
     await this.$store.dispatch('domains/refresh')
-  }
+  },
 }
 </script>

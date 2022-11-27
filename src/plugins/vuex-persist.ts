@@ -11,4 +11,5 @@ const vuexPersistPlugin: Plugin = ({ store }) => {
     }).plugin(store)
   }
 }
+
 export default vuexPersistPlugin

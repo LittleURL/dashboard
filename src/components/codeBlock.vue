@@ -3,14 +3,16 @@
     class="code-block"
     dir="ltr"
     outlined
+    :max-width="maxWidth"
+    min-with="1"
   >
     <!-- copy button -->
     <v-btn
-      absolute
       class="v-btn--copy mr-n2 mt-n2"
+      style="background-color: inherit"
+      absolute
       icon
       right
-      style="background-color: inherit"
       top
       @click="copy"
     >
@@ -22,13 +24,19 @@
     </v-btn>
 
     <!-- code -->
-    <slot></slot>
+    <div class="overflow-x-auto">
+      <slot></slot>
+    </div>
   </v-sheet>
 </template>
 
 <script>
 export default {
   name: 'CodeBlock',
+
+  props: {
+    maxWidth: { type: Number, default: undefined },
+  },
 
   data: () => ({
     copyClicked: false,
