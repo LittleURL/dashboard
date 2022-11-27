@@ -42,10 +42,11 @@
       <v-data-table
         :headers="headers"
         :items="links"
-        :items-per-page="5"
+        :items-per-page.sync="perPage"
         :loading="$fetchState.pending"
         :sort-by.sync="sortBy"
         :sort-desc.sync="sortDesc"
+        :footer-props="{'items-per-page-options': [10, 30, 50]}"
       >
         <!-- search  -->
         <template #top>
@@ -68,7 +69,7 @@
 
         <!-- item actions -->
         <template #item.actions="{ item }">
-          <NuxtLink :to="`${$route.path}/${linkId(item)}`">
+          <NuxtLink :to="`${$route.path}/${linkId(item)}/edit`">
             <v-icon>mdi-pencil</v-icon>
           </NuxtLink>
           <v-icon @click="$refs.confirmDelete.open(item, item.uri)">
@@ -99,6 +100,7 @@ type Data = {
   prefix: string | undefined
   sortBy: keyof Link
   sortDesc: boolean
+  perPage: number
   deleteDialogue: boolean
 }
 
@@ -137,6 +139,7 @@ export default {
       prefix: undefined,
       sortBy: 'uri',
       sortDesc: false,
+      perPage: 10,
       deleteDialogue: false,
     }
   },
