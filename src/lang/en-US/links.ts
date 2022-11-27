@@ -3,5 +3,6 @@ export default {
   uri: 'URI',
   target: 'Target',
   updatedAt: 'Updated',
-  createSuccess: 'Link created.'
+  createSuccess: 'Link created',
+  deleteSuccess: 'Link deleted'
 }

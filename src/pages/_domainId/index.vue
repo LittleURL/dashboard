@@ -46,7 +46,7 @@
         :loading="$fetchState.pending"
         :sort-by.sync="sortBy"
         :sort-desc.sync="sortDesc"
-        :footer-props="{'items-per-page-options': [10, 30, 50]}"
+        :footer-props="{ 'items-per-page-options': [10, 30, 50] }"
       >
         <!-- search  -->
         <template #top>
@@ -85,14 +85,14 @@
 </template>
 
 <script lang="ts">
-import base64url from 'base64url'
 import { DateTime } from 'luxon'
 import { DataTableHeader } from 'vuetify'
 import DeleteDialogue from '~/components/deleteDialogue.vue'
 import PageHeader from '~/components/pageHeader.vue'
 import RelativeTimestamp from '~/components/relativeTimestamp.vue'
-import { linkId } from '~/helpers'
+import { linkId, successAlert } from '~/helpers'
 import { Domain, Link } from '~/types'
+import { AlertType } from '~/types/alert'
 
 type Data = {
   headers: DataTableHeader[]
@@ -171,11 +171,17 @@ export default {
   methods: {
     linkId,
 
-    async deleteLink(uri: string) {
+    async deleteLink(link: Link) {
       const { domainId } = this.$route.params
       this.$refs.confirmDelete.pending()
-      await this.$axios.$delete(`/domains/${domainId}/links/${base64url(uri)}`)
-      this.$refs.confirmDelete.close()
+
+      try {
+        await this.$axios.$delete(`/domains/${domainId}/links/${linkId(link)}`)
+        this.$store.commit('addAlert', successAlert(this.$t('links.deleteSuccess')))
+        this.$fetch()
+      } finally {
+        this.$refs.confirmDelete.close()
+      }
     },
   },
 }

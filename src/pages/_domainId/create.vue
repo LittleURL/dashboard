@@ -82,7 +82,7 @@ import {
   setInteractionMode,
 } from 'vee-validate'
 import PageHeader from '~/components/pageHeader.vue'
-import { prefixString } from '~/helpers'
+import { prefixString, successAlert } from '~/helpers'
 import { Domain } from '~/types'
 import { AlertType } from '~/types/alert'
 
@@ -132,16 +132,12 @@ export default {
           uri: prefixString('/', this.link.uri),
         })
       } catch (err) {
-        // this.$store.commit('addAlert', {
-        //   type: AlertType.Error,
-        //   text: err.message
-        // })
         this.loading = false
         return
       }
 
       // success
-      this.$store.commit('addAlert', { type: AlertType.Success, text: this.$t('links.createSuccess') })
+      this.$store.commit('addAlert', successAlert(this.$t('links.createSuccess')))
       await this.$router.push(`/${this.currentDomain.id}`)
     },
   },
