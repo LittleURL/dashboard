@@ -19,7 +19,7 @@
             <validation-provider
               v-slot="{ errors, valid }"
               :name="$t('links.uri')"
-              rules="required|max:1024"
+              :rules="{ required:true, max:1024, regex: /^(\/?[\w\-]+)+$/ }"
             >
               <v-text-field
                 v-model="link.uri"
@@ -64,11 +64,11 @@
     </v-card>
 
     <!-- example -->
-    <v-card class="mx-auto mb-3 pb-0" outlined>
+    <v-card v-if="!!link.uri && !!link.target" class="mx-auto mb-3 pb-0" outlined>
       <v-card-text>{{ $t('example') }}</v-card-text>
       <v-card-text>
         <a :href="link.target">
-          https://{{ currentDomain.domain }}/{{ link.uri }}
+          https://{{ currentDomain.domain }}{{ link.uri | uriPrefix }}
         </a>
       </v-card-text>
     </v-card>
@@ -82,7 +82,9 @@ import {
   setInteractionMode,
 } from 'vee-validate'
 import PageHeader from '~/components/pageHeader.vue'
+import { prefixString } from '~/helpers'
 import { Domain } from '~/types'
+import { AlertType } from '~/types/alert'
 
 setInteractionMode('eager')
 
@@ -98,6 +100,10 @@ type Data = {
 export default {
   name: 'CreateLink',
   components: { PageHeader, ValidationObserver, ValidationProvider },
+
+  filters: {
+    uriPrefix: (value: string) => prefixString('/', value)
+  },
 
   data(): Data {
     return {
@@ -119,16 +125,24 @@ export default {
       this.$refs.observer!.validate()
       this.loading = true
       const { domainId } = this.$route.params
+
       try {
         await this.$axios.$post(`/domains/${domainId}/links`, {
           ...this.link,
-          uri: `/${this.link.uri}`,
+          uri: prefixString('/', this.link.uri),
         })
       } catch (err) {
-        alert(err)
+        // this.$store.commit('addAlert', {
+        //   type: AlertType.Error,
+        //   text: err.message
+        // })
+        this.loading = false
+        return
       }
-      // TODO: alert on error
-      this.loading = false
+
+      // success
+      this.$store.commit('addAlert', { type: AlertType.Success, text: this.$t('links.createSuccess') })
+      await this.$router.push(`/${this.currentDomain.id}`)
     },
   },
 }
