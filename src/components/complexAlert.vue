@@ -1,10 +1,11 @@
 <template>
-  <v-dialog v-if="alert !== undefined" v-model="showDetails">
+  <v-dialog v-model="showDetails">
     <!-- alert -->
     <template #activator="{ on, attrs }">
       <v-alert
         :type="alert.type"
         :dismissible="alert.dismissible ?? true"
+        transition="slide-x-reverse-transition"
         @input="dismiss"
       >
         {{ alert.text }}
@@ -21,7 +22,7 @@
           bottom
           color="white"
           height="8"
-        ></v-progress-linear>
+        />
       </v-alert>
     </template>
 
