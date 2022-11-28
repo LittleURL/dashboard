@@ -1,5 +1,7 @@
-# Created by https://www.toptal.com/developers/gitignore/api/nuxtjs,node,visualstudiocode,terraform
-# Edit at https://www.toptal.com/developers/gitignore?templates=nuxtjs,node,visualstudiocode,terraform
+src/static/sw.js
+
+# Created by https://www.toptal.com/developers/gitignore/api/node,nuxtjs,terraform,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=node,nuxtjs,terraform,visualstudiocode
 
 ### Node ###
 # Logs
@@ -201,4 +203,4 @@ terraform.rc
 .history
 .ionide
 
-# End of https://www.toptal.com/developers/gitignore/api/nuxtjs,node,visualstudiocode,terraform
+# End of https://www.toptal.com/developers/gitignore/api/node,nuxtjs,terraform,visualstudiocode
