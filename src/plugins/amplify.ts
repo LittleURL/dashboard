@@ -14,14 +14,16 @@ Amplify.configure({
   },
 })
 
-const amplifyPlugin: Plugin = ({ store }) => {
-  Hub.listen('auth', (event) => {
-    store.commit('addAlert', {
-      type: AlertType.Info,
-      text: `Amplify Auth: ${event.payload.event}`,
-      details: event,
+const amplifyPlugin: Plugin = ({ store, isDev }) => {
+  if (isDev) {
+    Hub.listen('auth', (event) => {
+      store.commit('addAlert', {
+        type: AlertType.Info,
+        text: `Amplify Auth: ${event.payload.event}`,
+        details: event,
+      })
     })
-  })
+  }
 }
 
 export default amplifyPlugin
