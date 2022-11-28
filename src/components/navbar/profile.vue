@@ -14,8 +14,8 @@
         <v-spacer />
         <span class="text-center"> @{{ username }} </span>
         <v-spacer />
-        <v-btn icon @click="logout">
-          <v-icon>mdi-logout</v-icon>
+        <v-btn icon :title="$t('auth.logout')" @click="logout">
+          <v-icon color="red">mdi-logout</v-icon>
         </v-btn>
       </v-list-item>
 
