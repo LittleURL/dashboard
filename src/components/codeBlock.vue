@@ -24,7 +24,7 @@
     </v-btn>
 
     <!-- code -->
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto overflow-y-auto">
       <slot></slot>
     </div>
   </v-sheet>
