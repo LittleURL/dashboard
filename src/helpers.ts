@@ -1,13 +1,7 @@
-import { Auth, OpenIDConnectScheme } from '@nuxtjs/auth-next'
 import base64url from 'base64url'
 import { v4 as uuid } from 'uuid'
 import { Link } from './types'
 import { Alert, AlertType } from './types/alert'
-
-export const getToken = ($auth: Auth) => {
-  const strategy = $auth.strategy as OpenIDConnectScheme
-  return strategy.token.get()
-}
 
 export const linkId = (link: Link): string => base64url(link.uri)
 

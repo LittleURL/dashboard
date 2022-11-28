@@ -38,7 +38,9 @@
         <v-card-text>
           <code-block>
             <pre class="language-json">{{
-              JSON.stringify(alert.details, null, 2)
+              typeof alert.details === 'string'
+                ? alert.details
+                : JSON.stringify(alert.details, null, 2)
             }}</pre>
           </code-block>
         </v-card-text>

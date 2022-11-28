@@ -20,7 +20,6 @@
       "@nuxt/types",
       "@nuxtjs/i18n",
       "@nuxtjs/axios",
-      "@nuxtjs/auth-next",
       "@nuxtjs/vuetify",
       "@types/node",
     ]

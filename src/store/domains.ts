@@ -1,5 +1,4 @@
 import { ActionTree, GetterTree, MutationTree } from 'vuex'
-import { getToken } from '../helpers'
 import { Domain, DomainID } from '../types/domain'
 import { RootState } from '.'
 
@@ -24,11 +23,7 @@ export const mutations: MutationTree<DomainsState> = {
 
 export const actions: ActionTree<DomainsState, RootState> = {
   async refresh({ commit }) {
-    const domains = await this.$axios.$get('/domains', {
-      headers: {
-        Authorization: getToken(this.$auth),
-      },
-    })
+    const domains = await this.$axios.$get('/domains')
     commit('domains', domains)
   },
 }

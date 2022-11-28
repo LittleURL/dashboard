@@ -1,4 +1,7 @@
 export default {
   login: 'Login',
-  logout: 'Logout'
+  logout: 'Logout',
+  register: 'Register',
+  email: 'Email Address',
+  password: 'Password'
 }

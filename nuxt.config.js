@@ -37,6 +37,7 @@ export default {
     '~/plugins/validator',
     '~/plugins/luxon',
     '~/plugins/axios',
+    '~/plugins/amplify',
     { src: '~/plugins/vuex-persist', mode: 'client' }
   ],
 
@@ -54,7 +55,6 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     'cookie-universal-nuxt',
-    '@nuxtjs/auth-next',
     '@nuxtjs/axios',
     '@nuxtjs/i18n',
     '@nuxtjs/pwa',
@@ -70,20 +70,20 @@ export default {
     }
   },
 
-  auth: {
-    strategies: {
-      cognito: {
-        scheme: 'openIDConnect',
-        clientId: '24jot6kfr6648ihq4dtqhum1rb',
-        endpoints: {
-          configuration: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_wWJ25Mayx/.well-known/openid-configuration'
-        },
-        scope: "openid profile",
-        autoLogout: true,
-      }
-    },
-    plugins: ['~/plugins/auth']
-  },
+  // auth: {
+  //   strategies: {
+  //     cognito: {
+  //       scheme: 'openIDConnect',
+  //       clientId: '24jot6kfr6648ihq4dtqhum1rb',
+  //       endpoints: {
+  //         configuration: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_wWJ25Mayx/.well-known/openid-configuration'
+  //       },
+  //       scope: "openid profile",
+  //       autoLogout: true,
+  //     }
+  //   },
+  //   plugins: ['~/plugins/auth']
+  // },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
