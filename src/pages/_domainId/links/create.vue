@@ -19,16 +19,16 @@
             <validation-provider
               v-slot="{ errors, valid }"
               :name="$t('links.uri')"
-              :rules="{ required:true, max:1024, regex: /^(\/?[\w\-]+)+$/ }"
+              :rules="validationRules.uri"
             >
               <v-text-field
                 v-model="link.uri"
-                :counter="1024"
+                :counter="validationRules.uri.max"
+                :required="validationRules.uri.required"
                 :label="$t('links.uri')"
                 :error-messages="errors"
                 :success="valid"
                 placeholder="google"
-                required
               />
             </validation-provider>
 
@@ -36,16 +36,34 @@
             <validation-provider
               v-slot="{ errors, valid }"
               :name="$t('links.target')"
-              rules="required|max:2048"
+              :rules="validationRules.target"
             >
               <v-text-field
                 v-model="link.target"
-                :counter="2048"
+                :counter="validationRules.target.max"
+                :required="validationRules.target.required"
                 :label="$t('links.target')"
                 :error-messages="errors"
                 :success="valid"
                 placeholder="https://google.com"
-                required
+              />
+            </validation-provider>
+
+            
+
+            <!-- Description -->
+            <validation-provider
+              v-slot="{ errors, valid }"
+              :name="$t('links.description')"
+              :rules="validationRules.description"
+            >
+              <v-text-field
+                v-model="link.description"
+                :counter="validationRules.description.max"
+                :required="validationRules.description.required"
+                :label="$t('links.description')"
+                :error-messages="errors"
+                :success="valid"
               />
             </validation-provider>
           </v-form>
@@ -82,17 +100,14 @@ ValidationProvider
 } from 'vee-validate'
 import PageHeader from '~/components/pageHeader.vue'
 import { prefixString, successAlert } from '~/helpers'
-import { Domain } from '~/types'
+import { Domain, Link, LinkValidator } from '~/types'
 
 setInteractionMode('eager')
 
 type Data = {
-  link: {
-    uri?: string
-    target?: string
-  }
-  invalid: boolean
+  link: Partial<Link>
   loading: boolean
+  validationRules: typeof LinkValidator
 }
 
 export default {
@@ -106,8 +121,8 @@ export default {
   data(): Data {
     return {
       loading: false,
-      invalid: true,
       link: {},
+      validationRules: LinkValidator
     }
   },
 
