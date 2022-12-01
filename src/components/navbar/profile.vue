@@ -2,17 +2,20 @@
   <!-- Avatar -->
   <v-menu offset-y :close-on-content-click="false">
     <template #activator="{ on }">
-      <v-btn color="primary" dark icon size="32" v-on="on">
-        <v-avatar v-if="avatar" size="32">
-          <img :src="avatar" :alt="`@${username}`" />
+      <v-btn color="primary" icon v-on="on">
+        <v-avatar size="32">
+          <v-img v-if="avatar" :src="avatar" :alt="`@${nickname}`">
+            <template #placeholder>
+              <v-icon size="32">mdi-account</v-icon>
+            </template>
+          </v-img>
         </v-avatar>
-        <v-icon v-else size="32">mdi-account</v-icon>
       </v-btn>
     </template>
-    <v-list width="230">
+    <v-list min-width="230">
       <v-list-item>
         <v-spacer />
-        <span class="text-center"> @{{ username }} </span>
+        <span class="text-center">@{{ nickname }}</span>
         <v-spacer />
         <v-btn icon :title="$t('auth.logout')" @click="logout">
           <v-icon color="red">mdi-logout</v-icon>
@@ -35,13 +38,13 @@ export default {
   components: { NavSettings },
 
   data: () => ({
-    username: undefined,
+    nickname: undefined,
     avatar: undefined,
   }),
 
   async mounted() {
     const user = await Auth.currentAuthenticatedUser()
-    this.username = user.username
+    this.nickname = user.attributes.nickname
     this.avatar = user.attributes.picture
   },
 
@@ -49,7 +52,7 @@ export default {
     async logout() {
       await Auth.signOut()
       this.$router.push('/login')
-    }
-  }
+    },
+  },
 }
 </script>

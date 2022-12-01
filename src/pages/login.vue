@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card v-if="challengeName === undefined">
     <v-card-title>
       <v-tabs v-model="tab" grow>
         <v-tab key="login">{{ $t('auth.login') }}</v-tab>
@@ -11,66 +11,88 @@
       <v-tabs-items v-model="tab">
         <!-- login -->
         <v-tab-item key="login">
-          <v-form>
-            <v-text-field
-              v-model="email"
-              class="pt-1"
-              :label="$t('auth.email')"
-              required
-              outlined
-            />
-            <v-text-field
-              v-model="password"
-              :label="$t('auth.password')"
-              required
-              outlined
-              type="password"
-            />
-            <v-btn color="primary" :loading="loading" @click="login">
-              {{ $t('submit') }}
-            </v-btn>
-          </v-form>
+          <auth-login
+            :email="email"
+            @challenge="loginChallenge"
+            @emailNotConfirmed="emailNotConfirmed"
+          />
         </v-tab-item>
 
         <!-- register -->
         <v-tab-item key="register">
-          <v-form> TODO </v-form>
+          <auth-register @success="registerSuccess" />
+          <v-divider class="mt-4" />
+          <auth-password-policy />
         </v-tab-item>
       </v-tabs-items>
     </v-card-text>
   </v-card>
+
+  <challenge-new-password
+    v-else-if="challengeName === 'NEW_PASSWORD_REQUIRED'"
+    :user="user"
+  />
+
+  <challenge-confirm-email
+    v-else-if="challengeName === 'CONFIRM_EMAIL'"
+    :email="email"
+  />
 </template>
 
 <script lang="ts">
-import { Auth } from 'aws-amplify'
+import { CognitoUser, ChallengeName } from 'amazon-cognito-identity-js'
+import AuthLogin from '~/components/auth/login.vue'
+import AuthRegister from '~/components/auth/register.vue'
+import AuthPasswordPolicy from '~/components/auth/passwordPolicy.vue'
+import ChallengeNewPassword from '~/components/auth/challengeNewPassword.vue'
+import ChallengeConfirmEmail from '~/components/auth/challengeConfirmEmail.vue'
+import { AlertType } from '~/types/alert'
 
 type Data = {
   tab: 'login' | 'register'
-  loading: boolean
   email?: string
-  password?: string
+  challengeName?: ChallengeName | 'CONFIRM_EMAIL'
+  user?: CognitoUser
 }
 
 export default {
   name: 'LoginPage',
+
+  components: {
+    AuthLogin,
+    AuthRegister,
+    AuthPasswordPolicy,
+    ChallengeNewPassword,
+    ChallengeConfirmEmail,
+  },
+
   layout: 'auth',
-  auth: false,
 
   data: (): Data => ({
     tab: 'login',
-    loading: false,
     email: undefined,
-    password: undefined,
+    challengeName: undefined,
   }),
 
   methods: {
-    async login() {
-      this.loading = true
-      // const { email, password } = this
-      // await this.$store.dispatch('auth/signIn', { email, password })
-      await Auth.signIn(this.email, this.password)
-      this.$router.push('/')
-      this.loading = false
+    registerSuccess(email: string) {
+      this.email = email
+      this.tab = 'login'
+    },
+
+    loginChallenge(user: CognitoUser) {
+      this.challengeName = user.challengeName
+      this.user = user
+    },
+
+    emailNotConfirmed(email: String) {
+      this.$store.commit('addAlert', {
+        type: AlertType.Warning,
+        text: this.$t('auth.emailNotConfirmed'),
+      })
+
+      this.challengeName = 'CONFIRM_EMAIL'
+      this.email = email
     },
   },
 }

@@ -66,6 +66,12 @@ tf-apply: ## Apply terraform changeset
 	$(TF) workspace select ${ENVIRONMENT}
 	$(TF) apply -input=false -auto-approve ./${PROJECT}.tfplan
 
+tf-output: ## write TF outputs to file
+	@echo "Writing terraform outputs to file(s)"
+	$(TF) workspace select ${ENVIRONMENT}
+	$(TF) output nuxt -no-color > ./.env
+	$(TF) output nuxt_deploy -no-color > ./.deploy.json
+
 ##@ Helpers
 .PHONY: help
 

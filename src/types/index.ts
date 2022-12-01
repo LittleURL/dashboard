@@ -1,4 +1,4 @@
-import { messages as ruleI18n } from 'vee-validate/dist/locale/en.json'
+import ruleI18n from '~/lang/en-US/validation'
 
 export * from './domain'
 export * from './links'

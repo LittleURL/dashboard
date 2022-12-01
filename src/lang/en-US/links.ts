@@ -4,5 +4,6 @@ export default {
   target: 'Target',
   updatedAt: 'Updated',
   createSuccess: 'Link created',
-  deleteSuccess: 'Link deleted'
+  deleteSuccess: 'Link deleted',
+  description: 'Description'
 }

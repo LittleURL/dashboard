@@ -1,6 +1,7 @@
 import { Plugin } from '@nuxt/types'
 import { configure, extend } from 'vee-validate'
 import * as rules from 'vee-validate/dist/rules'
+import passwordValidator from './password'
 
 const veeValidatePlugin: Plugin = ({ i18n }) => {
   // get messages from i18n
@@ -15,6 +16,9 @@ const veeValidatePlugin: Plugin = ({ i18n }) => {
   for (const [key, value] of Object.entries(rules)) {
     extend(key, value);
   }
+
+  // custom rules
+  extend('password', passwordValidator)
 }
 
 export default veeValidatePlugin

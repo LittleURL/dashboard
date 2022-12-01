@@ -1,9 +1,11 @@
-# data "aws_ssm_parameter" "cognito_pool" {
-#   name = "/${var.application}/cognito-pool"
-# }
+data "aws_ssm_parameter" "cognito_pool" {
+  name = "/${var.application}/cognito/pool-id"
+}
 
-# resource "aws_cognito_user_pool_client" "dashboard" {
-#   name = "dashboard"
+data "aws_ssm_parameter" "cognito_password_policy" {
+  name = "/${var.application}/cognito/password-policy"
+}
 
-#   user_pool_id = data.aws_ssm_parameter.cognito_pool.value
-# }
+data "aws_ssm_parameter" "cognito_client" {
+  name = "/${var.application}/cognito/client-dashboard"
+}

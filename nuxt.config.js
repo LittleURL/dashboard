@@ -31,10 +31,17 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 
+  env: {
+    cognitoPoolId: process.env.COGNITO_POOL_ID,
+    cognitoClientId: process.env.COGNITO_CLIENT_ID,
+    cognitoPasswordPolicy: process.env.COGNITO_PASSWORD_POLICY,
+    cognitoRegion: process.env.COGNITO_REGION
+  },
+
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/vuetify',
-    '~/plugins/validator',
+    '~/plugins/validator/index',
     '~/plugins/luxon',
     '~/plugins/axios',
     '~/plugins/amplify',
@@ -69,21 +76,6 @@ export default {
       retryCondition: isNetworkError
     }
   },
-
-  // auth: {
-  //   strategies: {
-  //     cognito: {
-  //       scheme: 'openIDConnect',
-  //       clientId: '24jot6kfr6648ihq4dtqhum1rb',
-  //       endpoints: {
-  //         configuration: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_wWJ25Mayx/.well-known/openid-configuration'
-  //       },
-  //       scope: "openid profile",
-  //       autoLogout: true,
-  //     }
-  //   },
-  //   plugins: ['~/plugins/auth']
-  // },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {

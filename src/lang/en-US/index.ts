@@ -11,6 +11,7 @@ const root = {
   example: 'Example',
   actions: 'Actions',
   save: 'Save',
+  submit: 'Submit',
   cancel: 'Cancel',
   delete: 'Delete',
   deleteConfirm: 'Are you sure you want to delete this item?',

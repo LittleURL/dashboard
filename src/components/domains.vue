@@ -16,9 +16,13 @@
     <v-list-item-group :value="currentDomain?.id">
       <template v-for="(domain, index) in allDomains">
         <v-list-item :key="domain.id" nuxt :to="`/${domain.id}`">
-            <v-list-item-content class="my-2">
-              <v-list-item-title>{{ domain.domain }}</v-list-item-title>
-            </v-list-item-content>
+          <v-list-item-content class="my-2">
+            <v-list-item-title v-text="domain.domain" />
+            <v-list-item-subtitle v-if="showDescriptions" v-text="domain.description" />
+          </v-list-item-content>
+          <v-list-item-action>
+            <user-role :role="domain.user_role" />
+          </v-list-item-action>
         </v-list-item>
         <v-divider v-if="index < allDomains.length - 1" :key="index" />
       </template>
@@ -28,9 +32,18 @@
 
 <script lang="ts">
 import { Domain } from '../types/domain'
+import UserRole from './userRole.vue'
 
 export default {
   name: 'DomainsList',
+
+  components: {
+    UserRole,
+  },
+
+  props: {
+    showDescriptions: { type: Boolean, default: false }
+  },
 
   data() {
     return {

@@ -2,7 +2,7 @@
   <div>
     <h1 class="v-heading text-center">{{ $t('domains.select') }}</h1>
     <v-card class="mx-auto mb-3 pb-0" outlined>
-      <domains-list />
+      <domains-list :show-descriptions="true" />
     </v-card>
   </div>
 </template>
