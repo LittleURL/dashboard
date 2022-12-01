@@ -13,13 +13,25 @@
       </v-btn>
     </template>
     <v-list min-width="230">
-      <v-list-item>
-        <v-spacer />
-        <span class="text-center">@{{ nickname }}</span>
-        <v-spacer />
-        <v-btn icon :title="$t('auth.logout')" @click="logout">
-          <v-icon color="red">mdi-logout</v-icon>
-        </v-btn>
+      <v-list-item two-line>
+        <!-- user info -->
+          <v-list-item-content>
+            <v-list-item-title>
+              <NuxtLink to="/profile" class="white--text">
+                @{{ nickname }}
+              </NuxtLink>
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              {{ email }}
+            </v-list-item-subtitle>
+          </v-list-item-content>
+
+        <!-- logout -->
+        <v-list-item-action>
+          <v-btn :title="$t('auth.logout')" icon @click="logout">
+            <v-icon color="red">mdi-logout</v-icon>
+          </v-btn>
+        </v-list-item-action>
       </v-list-item>
 
       <!-- settings -->
@@ -40,12 +52,14 @@ export default {
   data: () => ({
     nickname: undefined,
     avatar: undefined,
+    email: undefined,
   }),
 
   async mounted() {
     const user = await Auth.currentAuthenticatedUser()
     this.nickname = user.attributes.nickname
     this.avatar = user.attributes.picture
+    this.email = user.attributes.email
   },
 
   methods: {
