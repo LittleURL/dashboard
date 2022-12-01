@@ -126,16 +126,17 @@
 <script lang="ts">
 import { Auth } from 'aws-amplify'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
-import { RegisterValidator } from '~/types'
+import { AuthValidator } from '~/types'
 import { AlertType } from '~/types/alert'
 
 type Data = {
   loading: boolean
+  nickname?: string
   email?: string
   emailConfirm?: string
   password?: string
   passwordConfirm?: string
-  validationRules: typeof RegisterValidator
+  validationRules: typeof AuthValidator
 }
 
 export default {
@@ -145,11 +146,12 @@ export default {
 
   data: (): Data => ({
     loading: false,
+    nickname: undefined,
     email: undefined,
     emailConfirm: undefined,
     password: undefined,
     passwordConfirm: undefined,
-    validationRules: RegisterValidator,
+    validationRules: AuthValidator,
   }),
 
   methods: {

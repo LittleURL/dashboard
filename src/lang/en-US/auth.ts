@@ -3,10 +3,18 @@ export default {
   logout: 'Logout',
   register: 'Register',
   nickname: 'Username',
+  editProfile: 'Edit Profile',
+  changePassword: 'Change Password',
+  passwordChanged: 'Password updated',
+
+  // credentials
   email: 'Email Address',
   emailConfirm: 'Confirm Email',
   password: 'Password',
   passwordConfirm: 'Confirm Password',
+  oldPassword: 'Old Password',
+
+  // policies
   passwordPolicy: {
     title: 'Password Policy',
     minLength: 'Password must contain at least {len} characters',
@@ -16,6 +24,8 @@ export default {
     symbols: 'Password must contain a special character or a space',
     whitespace: 'Password must not contain a leading or trailing space'
   },
+
+  // challenges
   emailNotConfirmed: 'Email address is pending confirmation',
   invalidLogin: 'Email address and/or password is incorrect',
   challenge: {

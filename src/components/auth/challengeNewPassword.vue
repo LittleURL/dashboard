@@ -73,13 +73,13 @@
 import { Auth, CognitoUser } from '@aws-amplify/auth'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import AuthPasswordPolicy from './passwordPolicy.vue'
-import { RegisterValidator } from '~/types'
+import { AuthValidator } from '~/types'
 
 type Data = {
   loading: boolean
   password?: string
   passwordConfirm?: string
-  validationRules: typeof RegisterValidator
+  validationRules: typeof AuthValidator
 }
 
 export default {
@@ -95,7 +95,7 @@ export default {
     loading: false,
     password: undefined,
     passwordConfirm: undefined,
-    validationRules: RegisterValidator,
+    validationRules: AuthValidator,
   }),
 
   methods: {

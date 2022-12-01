@@ -1,13 +1,5 @@
 import { Validator } from '.'
 
-export type User = {
-  'cognito:username': string
-  email: string
-  email_verified: true
-  sub: string
-  picture: string | undefined
-}
-
 export enum UserRole {
   Admin = 'admin',
   Editor = 'editor',
@@ -15,7 +7,7 @@ export enum UserRole {
   Nobody = 'nobody',
 }
 
-type RegisterRequest = {
+export type User = {
   email: string
   password: string
   nickname: string
@@ -30,7 +22,7 @@ export const passwordPolicy = {
   symbols: envPasswordPolicy.require_symbols || true,
 }
 
-export const RegisterValidator: Validator<RegisterRequest> = {
+export const AuthValidator: Validator<User> = {
   nickname: { required: true, min: 3, max: 32 },
   email: { required: true, max: 255, email: true, confirmed: 'emailConfirm' },
   password: {
