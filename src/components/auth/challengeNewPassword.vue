@@ -52,6 +52,9 @@
 
         <!-- form actions -->
         <v-card-actions>
+          <v-btn text @click="$emit('cancel')">
+            {{ $t('cancel') }}
+          </v-btn>
           <v-spacer />
           <v-btn
             color="primary"

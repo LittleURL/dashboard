@@ -6,8 +6,11 @@ export default {
   editProfile: 'Edit Profile',
   changePassword: 'Change Password',
   passwordChanged: 'Password updated',
+  forgotPassword: 'Forgot Password',
+  codeSent: 'Confirmation code has been sent to your email address',
 
   // credentials
+  code: 'Confirmation Code',
   email: 'Email Address',
   emailConfirm: 'Confirm Email',
   password: 'Password',

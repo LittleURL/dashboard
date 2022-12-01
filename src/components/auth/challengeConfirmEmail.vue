@@ -16,12 +16,11 @@
       </v-card-text>
 
       <v-card-actions>
+        <v-btn text @click="$emit('cancel')">
+          {{ $t('cancel') }}
+        </v-btn>
         <v-spacer />
-        <v-btn
-          color="primary"
-          :loading="loading"
-          @click="submit"
-        >
+        <v-btn color="primary" :loading="loading" @click="submit">
           {{ $t('submit') }}
         </v-btn>
       </v-card-actions>

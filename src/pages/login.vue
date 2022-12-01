@@ -15,6 +15,7 @@
             :email="email"
             @challenge="loginChallenge"
             @emailNotConfirmed="emailNotConfirmed"
+            @forgotPassword="forgotPassword"
           />
         </v-tab-item>
 
@@ -31,11 +32,18 @@
   <challenge-new-password
     v-else-if="challengeName === 'NEW_PASSWORD_REQUIRED'"
     :user="user"
+    @cancel="cancelChallenge"
   />
 
   <challenge-confirm-email
     v-else-if="challengeName === 'CONFIRM_EMAIL'"
     :email="email"
+    @cancel="cancelChallenge"
+  />
+
+  <forgot-password
+    v-else-if="challengeName === 'FORGOT_PASSWORD'"
+    @cancel="cancelChallenge"
   />
 </template>
 
@@ -44,6 +52,7 @@ import { CognitoUser, ChallengeName } from 'amazon-cognito-identity-js'
 import AuthLogin from '~/components/auth/login.vue'
 import AuthRegister from '~/components/auth/register.vue'
 import AuthPasswordPolicy from '~/components/auth/passwordPolicy.vue'
+import ForgotPassword from '~/components/auth/forgotPassword.vue'
 import ChallengeNewPassword from '~/components/auth/challengeNewPassword.vue'
 import ChallengeConfirmEmail from '~/components/auth/challengeConfirmEmail.vue'
 import { AlertType } from '~/types/alert'
@@ -51,8 +60,8 @@ import { AlertType } from '~/types/alert'
 type Data = {
   tab: 'login' | 'register'
   email?: string
-  challengeName?: ChallengeName | 'CONFIRM_EMAIL'
   user?: CognitoUser
+  challengeName?: ChallengeName | 'CONFIRM_EMAIL' | 'FORGOT_PASSWORD'
 }
 
 export default {
@@ -61,6 +70,7 @@ export default {
   components: {
     AuthLogin,
     AuthRegister,
+    ForgotPassword,
     AuthPasswordPolicy,
     ChallengeNewPassword,
     ChallengeConfirmEmail,
@@ -71,6 +81,7 @@ export default {
   data: (): Data => ({
     tab: 'login',
     email: undefined,
+    user: undefined,
     challengeName: undefined,
   }),
 
@@ -85,6 +96,12 @@ export default {
       this.user = user
     },
 
+    cancelChallenge() {
+      this.challengeName = undefined
+      this.email = undefined
+      this.user = undefined
+    },
+
     emailNotConfirmed(email: String) {
       this.$store.commit('addAlert', {
         type: AlertType.Warning,
@@ -93,6 +110,10 @@ export default {
 
       this.challengeName = 'CONFIRM_EMAIL'
       this.email = email
+    },
+
+    forgotPassword() {
+      this.challengeName = 'FORGOT_PASSWORD'
     },
   },
 }

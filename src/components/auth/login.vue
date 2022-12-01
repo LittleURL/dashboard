@@ -20,7 +20,9 @@
     </v-card-text->
 
     <v-card-actions>
-
+      <v-btn text @click="$emit('forgotPassword')">
+        {{ $t('auth.forgotPassword') }}
+      </v-btn>
       <v-spacer />
       <v-btn color="primary" :loading="loading" @click="login">
         {{ $t('submit') }}
