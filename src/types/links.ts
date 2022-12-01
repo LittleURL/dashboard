@@ -1,4 +1,5 @@
 import { DomainID } from "./domain"
+import { Validator } from "."
 
 export type Link = {
   domain_id: DomainID,
