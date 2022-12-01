@@ -1,22 +1,12 @@
 <template>
   <v-app>
-    <!-- drawer -->
-    <v-navigation-drawer
-      v-if="!!currentDomain"
-      v-model="drawer"
-      fixed
-      app
-    ></v-navigation-drawer>
-
-    <!-- navbar -->
     <v-app-bar fixed app>
-      <v-app-bar-nav-icon
-        :disabled="!currentDomain"
-        @click.stop="drawer = !drawer"
-      />
+      <v-btn icon plain nuxt exact to="/">
+        <v-icon>mdi-home</v-icon>
+      </v-btn>
 
       <!-- domain -->
-      <v-spacer class="pull-right" />
+      <v-spacer />
       <v-menu offset-y>
         <!-- activator -->
         <template #activator="{ on, attrs }">
