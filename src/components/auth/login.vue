@@ -1,23 +1,32 @@
 <template>
-  <v-form>
-    <v-text-field
-      v-model="email"
-      class="pt-1"
-      :label="$t('auth.email')"
-      required
-      outlined
-    />
-    <v-text-field
-      v-model="password"
-      :label="$t('auth.password')"
-      required
-      outlined
-      type="password"
-    />
-    <v-btn color="primary" :loading="loading" @click="login">
-      {{ $t('submit') }}
-    </v-btn>
-  </v-form>
+  <div>
+    <v-card-text->
+      <v-form>
+        <v-text-field
+          v-model="email"
+          class="pt-1"
+          :label="$t('auth.email')"
+          required
+          outlined
+        />
+        <v-text-field
+          v-model="password"
+          :label="$t('auth.password')"
+          required
+          outlined
+          type="password"
+        />
+      </v-form>
+    </v-card-text->
+
+    <v-card-actions>
+
+      <v-spacer />
+      <v-btn color="primary" :loading="loading" @click="login">
+        {{ $t('submit') }}
+      </v-btn>
+    </v-card-actions>
+  </div>
 </template>
 
 <script lang="ts">
