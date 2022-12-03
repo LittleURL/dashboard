@@ -30,6 +30,7 @@
 
 <script lang="ts">
 import { Auth } from '@aws-amplify/auth'
+import { authErrorAlert } from '~/helpers'
 
 type Data = {
   loading: boolean
@@ -61,9 +62,15 @@ export default {
   methods: {
     async submit() {
       this.loading = true
-      await Auth.confirmSignUp(this.username, this.code)
+
+      try {
+        await Auth.confirmSignUp(this.username, this.code)
+        this.$router.push('/login')
+      } catch (err) {
+        this.$store.commit('addAlert', authErrorAlert(err))
+      }
+
       this.loading = false
-      this.$router.push('/login')
     },
   },
 }

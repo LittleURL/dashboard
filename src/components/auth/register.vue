@@ -1,7 +1,7 @@
 <template>
   <validation-observer ref="observer" v-slot="{ invalid }">
     <v-card-text>
-      <v-form @submit.prevent="submit">
+      <v-form>
         <v-row>
           <!-- nickname -->
           <v-col>
@@ -126,6 +126,7 @@
 <script lang="ts">
 import { Auth } from 'aws-amplify'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import { authErrorAlert } from '~/helpers'
 import { AuthValidator } from '~/types'
 import { AlertType } from '~/types/alert'
 
@@ -165,7 +166,7 @@ export default {
           password: this.password,
           attributes: {
             email: this.email,
-            nickname: this.nickname
+            nickname: this.nickname,
           },
         })
 
@@ -180,12 +181,7 @@ export default {
         this.passwordConfirm = undefined
         this.$emit('success', this.email)
       } catch (err) {
-        this.$store.commit('addAlert', {
-          type: AlertType.Error,
-          text: `Auth Error: ${err.name}`,
-          details: err,
-          timeout: 5000,
-        })
+        this.$store.commit('addAlert', authErrorAlert(err))
       }
 
       this.loading = false

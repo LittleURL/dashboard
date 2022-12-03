@@ -76,6 +76,7 @@
 import { Auth, CognitoUser } from '@aws-amplify/auth'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import AuthPasswordPolicy from './passwordPolicy.vue'
+import { authErrorAlert } from '~/helpers'
 import { AuthValidator } from '~/types'
 
 type Data = {
@@ -104,9 +105,15 @@ export default {
   methods: {
     async submit() {
       this.loading = true
-      await Auth.completeNewPassword(this.user, this.password)
+
+      try {
+        await Auth.completeNewPassword(this.user, this.password)
+        this.$router.push('/')
+      } catch (err) {
+        this.$store.commit('addAlert', authErrorAlert(err))
+      }
+
       this.loading = false
-      this.$router.push('/')
     },
   },
 }

@@ -15,6 +15,7 @@
 
 <script lang="ts">
 import { Auth, CognitoUser } from '@aws-amplify/auth'
+import { authErrorAlert } from '~/helpers'
 
 type Data = {
   loading: boolean
@@ -36,9 +37,15 @@ export default {
   methods: {
     async submit() {
       this.loading = true
-      await Auth.confirmSignIn(this.user, this.code, 'SOFTWARE_TOKEN_MFA')
+
+      try {
+        await Auth.confirmSignIn(this.user, this.code, 'SOFTWARE_TOKEN_MFA')
+        this.$router.push('/')
+      } catch (err) {
+        this.$store.commit('addAlert', authErrorAlert(err))
+      }
+
       this.loading = false
-      this.$router.push('/')
     },
   },
 }

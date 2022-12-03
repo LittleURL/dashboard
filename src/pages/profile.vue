@@ -159,12 +159,11 @@
 
 <script lang="ts">
 import { Auth } from '@aws-amplify/auth'
-import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import QRCode from 'qrcode'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import AuthPasswordPolicy from '~/components/auth/passwordPolicy.vue'
-import { successAlert } from '~/helpers'
-import { AuthValidator, MFAMethods, CognitoUserWithAttributes } from '~/types'
-import { AlertType } from '~/types/alert'
+import { authErrorAlert, successAlert } from '~/helpers'
+import { AuthValidator, CognitoUserWithAttributes, MFAMethods } from '~/types'
 
 type Data = {
   user?: CognitoUserWithAttributes
@@ -232,12 +231,7 @@ export default {
         await Auth.changePassword(user, this.oldPassword, this.password)
         this.$store.commit('addAlert', successAlert(this.$t('passwordChanged')))
       } catch (err) {
-        this.$store.commit('addAlert', {
-          type: AlertType.Error,
-          text: `Auth Error: ${err.name}`,
-          details: err,
-          timeout: 5000,
-        })
+        this.$store.commit('addAlert', authErrorAlert(err))
       }
 
       this.oldPassword = undefined
@@ -264,12 +258,7 @@ export default {
         // proceed to next setup
         this.setupMfa = true
       } catch (err) {
-        this.$store.commit('addAlert', {
-          type: AlertType.Error,
-          text: `Auth Error: ${err.name}`,
-          details: err,
-          timeout: 5000,
-        })
+        this.$store.commit('addAlert', authErrorAlert(err))
       }
 
       this.setupMfaLoading = false
@@ -283,12 +272,7 @@ export default {
         await Auth.setPreferredMFA(this.user, 'TOTP')
         this.setupMfa = false
       } catch (err) {
-        this.$store.commit('addAlert', {
-          type: AlertType.Error,
-          text: `Auth Error: ${err.name}`,
-          details: err,
-          timeout: 5000,
-        })
+        this.$store.commit('addAlert', authErrorAlert(err))
       }
 
       this.setupMfaLoading = false

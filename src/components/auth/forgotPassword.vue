@@ -139,9 +139,8 @@ import { Auth } from '@aws-amplify/auth'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import AuthPasswordPolicy from '~/components/auth/passwordPolicy.vue'
 import PageHeader from '~/components/pageHeader.vue'
-import { successAlert } from '~/helpers'
+import { authErrorAlert, successAlert } from '~/helpers'
 import { AuthValidator } from '~/types'
-import { AlertType } from '~/types/alert'
 
 type Data = {
   loading: boolean
@@ -181,12 +180,7 @@ export default {
         await Auth.forgotPassword(this.email)
         this.stage = 'CODE'
       } catch (err) {
-        this.$store.commit('addAlert', {
-          type: AlertType.Error,
-          text: `Auth Error: ${err.name}`,
-          details: err,
-          timeout: 5000,
-        })
+        this.$store.commit('addAlert', authErrorAlert(err))
       }
 
       this.loading = false
@@ -201,15 +195,13 @@ export default {
 
       try {
         await Auth.forgotPasswordSubmit(this.email, this.code, this.password)
-        this.$store.commit('addAlert', successAlert(this.$t('auth.passwordChanged')))
+        this.$store.commit(
+          'addAlert',
+          successAlert(this.$t('auth.passwordChanged'))
+        )
         this.$emit('cancel')
       } catch (err) {
-        this.$store.commit('addAlert', {
-          type: AlertType.Error,
-          text: `Auth Error: ${err.name}`,
-          details: err,
-          timeout: 5000,
-        })
+        this.$store.commit('addAlert', authErrorAlert(err))
         this.stage = 'CODE'
       }
 
