@@ -1,3 +1,4 @@
+import { CognitoUser } from '@aws-amplify/auth'
 import { Validator } from '.'
 
 export enum UserRole {
@@ -11,6 +12,15 @@ export type User = {
   email: string
   password: string
   nickname: string
+}
+
+// from amplify
+export type MFAMethods = 'TOTP' | 'SMS' | 'NOMFA' | 'SMS_MFA' | 'SOFTWARE_TOKEN_MFA'
+
+export class CognitoUserWithAttributes extends CognitoUser {
+  attributes: {
+    email: string
+  }
 }
 
 const envPasswordPolicy = JSON.parse(process.env.cognitoPasswordPolicy)

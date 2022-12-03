@@ -29,6 +29,12 @@
     </v-card-text>
   </v-card>
 
+  <challenge-software-mfa
+    v-else-if="challengeName === 'SOFTWARE_TOKEN_MFA'"
+    :user="user"
+    @cancel="cancelChallenge"
+  />
+
   <challenge-new-password
     v-else-if="challengeName === 'NEW_PASSWORD_REQUIRED'"
     :user="user"
@@ -48,13 +54,14 @@
 </template>
 
 <script lang="ts">
-import { CognitoUser, ChallengeName } from 'amazon-cognito-identity-js'
-import AuthLogin from '~/components/auth/login.vue'
-import AuthRegister from '~/components/auth/register.vue'
-import AuthPasswordPolicy from '~/components/auth/passwordPolicy.vue'
-import ForgotPassword from '~/components/auth/forgotPassword.vue'
-import ChallengeNewPassword from '~/components/auth/challengeNewPassword.vue'
+import { ChallengeName, CognitoUser } from 'amazon-cognito-identity-js'
 import ChallengeConfirmEmail from '~/components/auth/challengeConfirmEmail.vue'
+import ChallengeNewPassword from '~/components/auth/challengeNewPassword.vue'
+import ChallengeSoftwareMfa from '~/components/auth/challengeSoftwareMfa.vue'
+import ForgotPassword from '~/components/auth/forgotPassword.vue'
+import AuthLogin from '~/components/auth/login.vue'
+import AuthPasswordPolicy from '~/components/auth/passwordPolicy.vue'
+import AuthRegister from '~/components/auth/register.vue'
 import { AlertType } from '~/types/alert'
 
 type Data = {
@@ -74,6 +81,7 @@ export default {
     AuthPasswordPolicy,
     ChallengeNewPassword,
     ChallengeConfirmEmail,
+    ChallengeSoftwareMfa,
   },
 
   layout: 'auth',

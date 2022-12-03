@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card :flat="flat">
     <v-card-title>
       {{ $t('auth.passwordPolicy.title') }}
     </v-card-title>
@@ -39,6 +39,10 @@ type Data = {
 
 export default {
   name: 'AuthPasswordPolicy',
+
+  props: {
+    flat: { type: Boolean, default: false }
+  },
 
   data: (): Data => ({
     passwordPolicy,

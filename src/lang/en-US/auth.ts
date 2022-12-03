@@ -33,6 +33,12 @@ export default {
   invalidLogin: 'Email address and/or password is incorrect',
   challenge: {
     newPassword: 'Password change required',
-    confirmEmail: 'Confirm email address'
-  }
+    confirmEmail: 'Confirm email address',
+    softwareMfa: 'Enter code from your MFA app'
+  },
+
+  // mfa
+  mfa: 'Multi-Factor Authentication',
+  enableMfa: 'Enable MFA Device',
+  mfaScanCode: 'Scan code above using a TOTP app such as',
 }

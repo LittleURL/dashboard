@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card-text->
+    <v-card-text>
       <v-form>
         <v-text-field
           v-model="email"
@@ -17,7 +17,7 @@
           type="password"
         />
       </v-form>
-    </v-card-text->
+    </v-card-text>
 
     <v-card-actions>
       <v-btn text @click="$emit('forgotPassword')">
