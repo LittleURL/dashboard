@@ -39,6 +39,9 @@ export default {
 
   // mfa
   mfa: 'Multi-Factor Authentication',
+  mfaMethod: 'Current MFA method: {0}',
   enableMfa: 'Enable MFA Device',
+  disableMfa: 'Disable MFA Device',
+  disableMfaConfirm: 'Are you sure you want to disable your MFA?',
   mfaScanCode: 'Scan code above using a TOTP app such as',
 }

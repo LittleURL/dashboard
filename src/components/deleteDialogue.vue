@@ -1,9 +1,9 @@
 <template>
-  <v-dialog v-model="show" max-width="500px">
+  <v-dialog v-model="show" max-width="600px">
     <v-card>
-      <!-- warning -->
-      <v-card-title class="text-h5">
-        {{ $t('deleteConfirm') }}
+      <!-- message -->
+      <v-card-title class="d-flex justify-center text-h5">
+          {{ message || $t('deleteConfirm') }}
       </v-card-title>
 
       <!-- item name -->
@@ -24,7 +24,7 @@
       </v-card-actions>
 
       <!-- details -->
-      <div class="d-flex justify-center">
+      <div v-if="!!item" class="d-flex justify-center">
         <v-btn
           text
           class="info--text text-lowercase detail-button"
@@ -57,7 +57,13 @@ export default {
 
   components: { CodeBlock },
 
+  props: {
+    message: { type: String, default: undefined }
+  },
+
   emits: ['confirm'],
+
+  // expose: ['item',  'open', 'close'],
 
   data: (): Data => ({
     show: false,

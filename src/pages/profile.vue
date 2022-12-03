@@ -115,7 +115,15 @@
 
     <!-- MFA -->
     <v-card :loading="$fetchState.pending">
-      <v-card-title>{{ $t('auth.mfa') }}</v-card-title>
+      <v-card-title>
+        {{ $t('auth.mfa') }}
+        <v-spacer />
+        <v-chip :color="mfaMethod === 'NOMFA' ? 'error' : 'success'" label>
+          {{ $t(mfaMethod === 'NOMFA' ? 'disabled' : 'enabled') }}
+        </v-chip>
+      </v-card-title>
+
+      <!-- No MFA -->
       <v-card-text v-if="mfaMethod === 'NOMFA'">
         <!-- start mfa setup -->
         <v-btn
@@ -153,13 +161,28 @@
           @finish="finishMfaSetup"
         />
       </v-card-text>
+
+      <!-- Remove MFA -->
+      <v-card-text v-else>
+        <h3 class="text-center mb-2">
+          {{ $t('auth.mfaMethod', [mfaMethod]) }}
+        </h3>
+        <v-btn color="error" block @click="$refs.confirmMfaDisable.open(null)">
+          {{ $t('auth.disableMfa') }}
+        </v-btn>
+      </v-card-text>
+      <delete-dialogue
+        ref="confirmMfaDisable"
+        :message="$t('auth.disableMfaConfirm')"
+        @confirm="disableMfa"
+      />
     </v-card>
   </div>
 </template>
 
 <script lang="ts">
 import { Auth } from '@aws-amplify/auth'
-import QRCode from 'qrcode'
+import { toDataURL as qrDataURL, QRCodeToDataURLOptions } from 'qrcode'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import AuthPasswordPolicy from '~/components/auth/passwordPolicy.vue'
 import { authErrorAlert, successAlert } from '~/helpers'
@@ -250,9 +273,12 @@ export default {
 
         // generate QR code
         const issuer = 'littleurl.io'
-        this.setupMfaUrl = await QRCode.toDataURL(
+        this.setupMfaUrl = await qrDataURL(
           `otpauth://totp/LittleURL:${nickname}?secret=${mfaToken}&issuer=${issuer}`,
-          { type: 'image/webp', quality: 1 }
+          {
+            type: 'image/webp',
+            renderOpts: { quality: 1 },
+          } as QRCodeToDataURLOptions
         )
 
         // proceed to next setup
@@ -276,6 +302,17 @@ export default {
       }
 
       this.setupMfaLoading = false
+    },
+
+    async disableMfa() {
+      try {
+        await Auth.setPreferredMFA(this.user, 'NOMFA')
+        this.$fetch()
+      } catch (err) {
+        this.$store.commit('addAlert', authErrorAlert(err))
+      }
+
+      this.$refs.confirmDelete.close()
     },
   },
 }

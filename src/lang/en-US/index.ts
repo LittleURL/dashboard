@@ -16,7 +16,9 @@ const root = {
   delete: 'Delete',
   deleteConfirm: 'Are you sure you want to delete this item?',
   details: 'Details',
-  apiError: 'API Error ({code}): {message}'
+  apiError: 'API Error ({code}): {message}',
+  enabled: 'Enabled',
+  disabled: 'Disabled',
 }
 
 export default {
