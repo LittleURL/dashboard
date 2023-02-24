@@ -1,6 +1,6 @@
 import { ValidationRule } from 'vee-validate/dist/types/types'
 
-const passwordParams = ['lowercase', 'uppercase', 'numbers', 'symbol']
+const passwordParams = ['lowercase', 'uppercase', 'numbers', 'symbols']
 
 type PasswordArgs = {
   [K in typeof passwordParams[number]]?: boolean
