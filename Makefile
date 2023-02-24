@@ -32,25 +32,20 @@ lint-tf-fix: ## Auto fix terraform linting errors
 	$(TF) fmt -recursive
 
 ##@ Build
-.PHONY: build build-functions
+.PHONY: build
 
-build: build-functions ## Build everything
-
-build-functions: ## Build lambda functions
-	@echo "Building lambda functions"
-	rm -rf ./build/functions/*
-	GOOS=linux GOARCH=arm64 go build -o=./build/functions/ -tags=lambda.norpc ./functions/... 
-	cd ./build/functions \
-		&& for i in *; do mv "$$i" bootstrap && zip "$$i.zip" bootstrap; done \
-		&& find . -type f ! -name '*.zip' -delete
+build: ## Build Nuxt
+	npm run build
 
 ##@ Deployment
 .PHONY: tf-init tf-plan tf-apply
 
-upload-functions: ## Upload functions to S3
-	@echo "Uploading lambda deployment packages"
+upload: ## Upload static files to Cloudflare Pages
+	@echo "Uploading SPA to S3"
 	$(TF) workspace select ${ENVIRONMENT}
-	bash scripts/upload-functions.sh
+	bash scripts/upload.sh
+
+deploy: build upload ## Build and deploy
 
 tf-init: ## Initialise terraform
 	@echo "Initialising terraform"
@@ -69,8 +64,8 @@ tf-apply: ## Apply terraform changeset
 tf-output: ## write TF outputs to file
 	@echo "Writing terraform outputs to file(s)"
 	$(TF) workspace select ${ENVIRONMENT}
-	$(TF) output nuxt -no-color > ./.env
-	$(TF) output nuxt_deploy -no-color > ./.deploy.json
+	$(TF) output -raw nuxt > ./.env
+	$(TF) output -raw nuxt_deploy > ./.deploy.json
 
 ##@ Helpers
 .PHONY: help

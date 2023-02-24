@@ -43,7 +43,7 @@ resource "aws_s3_bucket_cors_configuration" "dashboard" {
   cors_rule {
     allowed_headers = ["*"]
     allowed_methods = ["HEAD", "GET", "POST", "PUT", "DELETE"]
-    allowed_origins = ["https://api.${local.domain}"]
+    allowed_origins = ["https://api.${data.aws_route53_zone.main.name}"]
     # expose_headers  = ["ETag"]
   }
 }
