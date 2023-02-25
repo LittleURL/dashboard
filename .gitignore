@@ -1,6 +1,7 @@
 src/static/sw.js
 .env
 .deploy.json
+**/*.tfplan
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,nuxtjs,terraform,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,nuxtjs,terraform,visualstudiocode

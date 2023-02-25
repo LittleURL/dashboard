@@ -37,6 +37,9 @@ lint-tf-fix: ## Auto fix terraform linting errors
 build: ## Build Nuxt
 	npm run build
 
+start: ## Start dev server
+	npm run dev
+
 ##@ Deployment
 .PHONY: tf-init tf-plan tf-apply
 
