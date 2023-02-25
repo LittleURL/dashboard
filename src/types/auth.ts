@@ -1,7 +1,7 @@
 import { CognitoUser } from '@aws-amplify/auth'
 import { Validator } from '.'
 
-export enum UserRole {
+export enum UserRoles {
   Admin = 'admin',
   Editor = 'editor',
   Viewer = 'viewer',
@@ -9,9 +9,12 @@ export enum UserRole {
 }
 
 export type User = {
+  id: string
   email: string
   password: string
   nickname: string
+  role?: UserRoles
+  picture?: string
 }
 
 // from amplify

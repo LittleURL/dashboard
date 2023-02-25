@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="show" max-width="600px">
+  <v-dialog v-model="show" max-width="600px" @click:outside="close">
     <v-card>
       <!-- message -->
       <v-card-title class="d-flex justify-center text-h5">

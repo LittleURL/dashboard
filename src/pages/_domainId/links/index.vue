@@ -10,7 +10,7 @@
       <template #actions>
         <!-- settings -->
         <v-btn
-          :to="`/${currentDomain.id}/edit`"
+          :to="`/${$route.params.domainId}/edit`"
           icon
           :title="$t('domains.edit')"
         >
@@ -31,7 +31,7 @@
         <v-btn
           icon
           :title="$t('links.create')"
-          :to="`/${currentDomain.id}/links/create`"
+          :to="`/${$route.params.domainId}/links/create`"
           @click="$fetch"
         >
           <v-icon color="primary">mdi-plus</v-icon>
@@ -71,7 +71,7 @@
 
         <!-- item actions -->
         <template #item.actions="{ item }">
-          <NuxtLink :to="`${$route.path}/links/${linkId(item)}/edit`">
+          <NuxtLink :to="`/${$route.params.domainId}/links/${linkId(item)}/edit`">
             <v-icon>mdi-pencil</v-icon>
           </NuxtLink>
           <v-icon @click="$refs.confirmDelete.open(item, item.uri)">
@@ -87,7 +87,6 @@
 </template>
 
 <script lang="ts">
-import { DateTime } from 'luxon'
 import { DataTableHeader } from 'vuetify'
 import DeleteDialogue from '~/components/deleteDialogue.vue'
 import PageHeader from '~/components/pageHeader.vue'
@@ -108,13 +107,6 @@ type Data = {
 export default {
   name: 'LinksList',
   components: { PageHeader, DeleteDialogue, RelativeTimestamp },
-
-  filters: {
-    timeRelative: (isoString: string) =>
-      DateTime.fromISO(isoString).toRelative(),
-    timeLocaleFull: (isoString: string) =>
-      DateTime.fromISO(isoString).toLocaleString(DateTime.DATETIME_FULL),
-  },
 
   data(): Data {
     return {

@@ -1,4 +1,4 @@
-import { UserRole } from "./auth"
+import { UserRoles } from "./auth"
 import { Validator } from '.'
 
 export type DomainID = string
@@ -8,7 +8,7 @@ export type Domain = {
   domain: string
   description?: string
   default_target?: string
-  user_role: UserRole
+  user_role: UserRoles
 }
 
 export const DomainValidator: Validator<Domain> = {

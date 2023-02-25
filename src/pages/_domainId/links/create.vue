@@ -4,7 +4,7 @@
     <page-header
       :title="String($t('links.create'))"
       :back-text="String($t('domains.links'))"
-      :back-to="`/${currentDomain.id}/links`"
+      :back-to="{ name: 'domainId-links', params: { domainId: currentDomain.id }}"
     />
 
     <!-- content -->

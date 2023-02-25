@@ -18,7 +18,10 @@
         <v-list-item :key="domain.id" nuxt :to="`/${domain.id}`">
           <v-list-item-content class="my-2">
             <v-list-item-title v-text="domain.domain" />
-            <v-list-item-subtitle v-if="showDescriptions" v-text="domain.description" />
+            <v-list-item-subtitle
+              v-if="showDescriptions"
+              v-text="domain.description"
+            />
           </v-list-item-content>
           <v-list-item-action>
             <user-role :role="domain.user_role" />
@@ -31,8 +34,8 @@
 </template>
 
 <script lang="ts">
-import { Domain } from '../types/domain'
 import UserRole from './userRole.vue'
+import { Domain } from '~/types/domain'
 
 export default {
   name: 'DomainsList',
@@ -42,7 +45,7 @@ export default {
   },
 
   props: {
-    showDescriptions: { type: Boolean, default: false }
+    showDescriptions: { type: Boolean, default: false },
   },
 
   data() {

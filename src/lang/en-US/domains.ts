@@ -4,5 +4,10 @@ export default {
   edit: 'Domain settings',
   links: 'Links',
   description: 'Description',
-  defaultTarget: 'Default Target'
+  defaultTarget: 'Default Target',
+  users: {
+    title: 'Users',
+    editRole: 'Edit Role',
+    deleteRole: 'Delete User Access'
+  }
 }
