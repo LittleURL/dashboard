@@ -4,7 +4,7 @@
       <v-card-title>{{ $t('auth.challenge.confirmEmail') }}</v-card-title>
       <v-card-text>
         <v-form>
-          <v-text-field v-model="username" :label="$t('auth.email')" />
+          <v-text-field v-model="username" :label="$t('auth.email')" outlined />
           <v-otp-input
             v-model="code"
             length="6"
@@ -20,6 +20,10 @@
           {{ $t('cancel') }}
         </v-btn>
         <v-spacer />
+
+        <v-btn color="warning" :loading="loading" outlined @click="resend">
+          {{ $t('auth.resendCode') }}
+        </v-btn>
         <v-btn color="primary" :loading="loading" @click="submit">
           {{ $t('submit') }}
         </v-btn>
@@ -31,6 +35,7 @@
 <script lang="ts">
 import { Auth } from '@aws-amplify/auth'
 import { authErrorAlert } from '~/helpers'
+import { AlertType } from '~/types/alert'
 
 type Data = {
   loading: boolean
@@ -53,7 +58,7 @@ export default {
 
   watch: {
     email() {
-      if (this.username === undefined) {
+      if (!this.username) {
         this.username = this.email
       }
     },
@@ -66,6 +71,23 @@ export default {
       try {
         await Auth.confirmSignUp(this.username, this.code)
         this.$router.push('/login')
+      } catch (err) {
+        this.$store.commit('addAlert', authErrorAlert(err))
+      }
+
+      this.loading = false
+    },
+
+    async resend() {
+      this.loading = true
+
+      try {
+        await Auth.resendSignUp(this.username)
+        this.$store.commit('addAlert', {
+          type: AlertType.Info,
+          text: this.$t('auth.codeSent'),
+          timeout: 5000, // TODO: set global default
+        })
       } catch (err) {
         this.$store.commit('addAlert', authErrorAlert(err))
       }

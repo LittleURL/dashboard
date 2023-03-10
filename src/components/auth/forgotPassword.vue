@@ -51,6 +51,10 @@
           {{ $t('cancel') }}
         </v-btn>
         <v-spacer />
+
+        <v-btn color="warning" :loading="loading" outlined @click="resend">
+          {{ $t('auth.resendCode') }}
+        </v-btn>
         <v-btn
           color="primary"
           :disabled="email === undefined"
@@ -141,6 +145,7 @@ import AuthPasswordPolicy from '~/components/auth/passwordPolicy.vue'
 import PageHeader from '~/components/pageHeader.vue'
 import { authErrorAlert, successAlert } from '~/helpers'
 import { AuthValidator } from '~/types'
+import { AlertType } from '~/types/alert'
 
 type Data = {
   loading: boolean
@@ -203,6 +208,23 @@ export default {
       } catch (err) {
         this.$store.commit('addAlert', authErrorAlert(err))
         this.stage = 'CODE'
+      }
+
+      this.loading = false
+    },
+
+    async resend() {
+      this.loading = true
+
+      try {
+        await Auth.resendSignUp(this.email)
+        this.$store.commit('addAlert', {
+          type: AlertType.Info,
+          text: this.$t('auth.codeSent'),
+          timeout: 5000, // TODO: set global default
+        })
+      } catch (err) {
+        this.$store.commit('addAlert', authErrorAlert(err))
       }
 
       this.loading = false

@@ -36,6 +36,7 @@ lint-tf-fix: ## Auto fix terraform linting errors
 
 build: ## Build Nuxt
 	npm run build
+	npm run generate
 
 start: ## Start dev server
 	npm run dev
@@ -48,7 +49,7 @@ upload: ## Upload static files to Cloudflare Pages
 	$(TF) workspace select ${ENVIRONMENT}
 	bash scripts/upload.sh
 
-deploy: build upload ## Build and deploy
+deploy: build tf-output upload ## Build and deploy
 
 tf-init: ## Initialise terraform
 	@echo "Initialising terraform"
