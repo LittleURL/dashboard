@@ -17,7 +17,7 @@
         <!-- user info -->
           <v-list-item-content>
             <v-list-item-title>
-              <NuxtLink to="/profile" class="white--text">
+              <NuxtLink to="/profile" class="primary--text font-weight-bold">
                 @{{ nickname }}
               </NuxtLink>
             </v-list-item-title>

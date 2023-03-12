@@ -11,6 +11,8 @@
 </template>
 
 <script lang="ts">
+import { setCookie } from 'tiny-cookie'
+
 export default {
   name: 'NavSettings',
 
@@ -23,7 +25,8 @@ export default {
   methods: {
     toggleDarkmode() {
       const theme = !this.$vuetify.theme.dark
-      this.$cookies.set('vuetify-dark-theme', theme)
+      const cookieOptions = { samesite: 'strict' }
+      setCookie('littleurl-darkmode', theme, cookieOptions)
       this.$vuetify.theme.dark = theme
     },
   },
