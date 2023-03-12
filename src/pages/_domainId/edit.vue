@@ -34,6 +34,7 @@
                       :label="$t('domains.description')"
                       :error-messages="errors"
                       :success="valid"
+                      outlined
                     />
                   </validation-provider>
 
@@ -50,6 +51,7 @@
                       :label="$t('domains.defaultTarget')"
                       :error-messages="errors"
                       :success="valid"
+                      outlined
                     />
                   </validation-provider>
                 </v-form>

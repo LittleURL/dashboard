@@ -29,6 +29,7 @@
                 :error-messages="errors"
                 :success="valid"
                 placeholder="google"
+                outlined
               />
             </validation-provider>
 
@@ -46,6 +47,7 @@
                 :error-messages="errors"
                 :success="valid"
                 placeholder="https://google.com"
+                outlined
               />
             </validation-provider>
 
@@ -64,6 +66,7 @@
                 :label="$t('links.description')"
                 :error-messages="errors"
                 :success="valid"
+                outlined
               />
             </validation-provider>
           </v-form>

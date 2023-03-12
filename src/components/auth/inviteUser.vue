@@ -28,6 +28,7 @@
                 :label="$t('auth.email')"
                 :error-messages="errors"
                 :success="valid"
+                outlined
               />
             </validation-provider>
 
@@ -45,6 +46,7 @@
                 :items="userRoles"
                 :error-messages="errors"
                 :success="valid"
+                outlined
               />
             </validation-provider>
           </v-form>

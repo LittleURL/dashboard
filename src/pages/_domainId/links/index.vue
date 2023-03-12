@@ -56,10 +56,11 @@
             <v-card-actions>
               <v-text-field
                 v-model="prefix"
-                outlined
                 :label="$t('searchPrefix')"
                 clearable
                 autofocus
+                filled
+                outlined
                 @change="$fetch"
               />
             </v-card-actions>
