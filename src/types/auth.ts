@@ -8,6 +8,13 @@ export enum UserRoles {
   Nobody = 'nobody',
 }
 
+export const UserRoleColors = {
+  [UserRoles.Admin]: 'red',
+  [UserRoles.Editor]: 'orange',
+  [UserRoles.Viewer]: 'blue',
+  [UserRoles.Nobody]: 'grey',
+}
+
 export type User = {
   id: string
   email: string
@@ -15,6 +22,11 @@ export type User = {
   nickname: string
   role?: UserRoles
   picture?: string
+}
+
+export type UserInvite = {
+  email: string,
+  role?: UserRoles
 }
 
 // from amplify
@@ -35,6 +47,9 @@ export const passwordPolicy = {
   symbols: envPasswordPolicy.require_symbols || true,
 }
 
+/**
+ * Validators
+ */
 export const AuthValidator: Validator<User> = {
   nickname: { required: true, min: 3, max: 32 },
   email: { required: true, max: 255, email: true, confirmed: 'emailConfirm' },
@@ -44,4 +59,9 @@ export const AuthValidator: Validator<User> = {
     min: passwordPolicy.minLength,
     password: passwordPolicy,
   },
+}
+
+export const UserInviteValidator: Validator<User> = {
+  email: { required: true, max: 255, email: true },
+  role: { required: true, oneOf: Object.values(UserRoles) }
 }

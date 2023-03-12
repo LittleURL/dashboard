@@ -214,20 +214,12 @@ export default {
     },
 
     async resend() {
-      this.loading = true
-
-      try {
-        await Auth.resendSignUp(this.email)
-        this.$store.commit('addAlert', {
-          type: AlertType.Info,
-          text: this.$t('auth.codeSent'),
-          timeout: 5000, // TODO: set global default
-        })
-      } catch (err) {
-        this.$store.commit('addAlert', authErrorAlert(err))
-      }
-
-      this.loading = false
+      await this.start()
+      this.$store.commit('addAlert', {
+        type: AlertType.Info,
+        text: this.$t('auth.codeSent'),
+        timeout: 5000, // TODO: set global default
+      })
     },
   },
 }

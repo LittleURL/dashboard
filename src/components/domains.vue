@@ -10,6 +10,9 @@
         <v-icon>mdi-cached</v-icon>
       </v-btn>
     </v-list-item>
+    <v-list-item v-if="!loading && allDomains.length === 0">
+      <v-list-item-title>{{ $t('domains.none') }}</v-list-item-title>
+    </v-list-item>
 
     <!-- available domains -->
     <v-divider />
@@ -34,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import UserRole from './userRole.vue'
+import UserRole from './auth/userRole.vue'
 import { Domain } from '~/types/domain'
 
 export default {

@@ -64,32 +64,34 @@
 
       <v-col cols="12" xl="6">
         <v-card :loading="loadingUsers">
-          <v-card-title>{{ $t('domains.users.title') }}</v-card-title>
-          <v-card-text>
-            <v-list>
-              <!-- user name -->
-              <v-list-item v-for="user in users" :key="user.id">
-                <v-avatar size="32">
-                  <v-img :src="user.picture" :alt="`@${user.nickname}`">
-                    <template #placeholder>
-                      <v-icon size="32">mdi-account</v-icon>
-                    </template>
-                  </v-img>
-                </v-avatar>
-                <span class="subtitle-1 ml-2">{{ user.nickname }}</span>
+          <v-card-title>
+            {{ $t('auth.users') }}
+            <v-spacer />
+            <invite-user />
+          </v-card-title>
+          <v-list>
+            <!-- user name -->
+            <v-list-item v-for="user in users" :key="user.id">
+              <v-avatar size="32">
+                <v-img :src="user.picture" :alt="`@${user.nickname}`">
+                  <template #placeholder>
+                    <v-icon size="32">mdi-account</v-icon>
+                  </template>
+                </v-img>
+              </v-avatar>
+              <span class="subtitle-1 ml-2">{{ user.nickname }}</span>
 
-
-                <!--  role  -->
-                <v-spacer />
-                <user-role
-                  :role="user.role"
-                  :user-id="user.id"
-                  editable
-                  @edited="loadUsers"
-                />
-              </v-list-item>
-            </v-list>
-          </v-card-text>
+              <!-- role -->
+              <v-spacer />
+              <user-role
+                :role="user.role"
+                :user-id="user.id"
+                :disabled="user.id === currentUserId"
+                editable
+                @edited="loadUsers"
+              />
+            </v-list-item>
+          </v-list>
         </v-card>
       </v-col>
     </v-row>
@@ -97,16 +99,19 @@
 </template>
 
 <script lang="ts">
-import { DataTableHeader } from 'vuetify'
+import { Auth } from 'aws-amplify'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
-import UserRole from '~/components/userRole.vue'
-import { Domain, DomainValidator, User, UserRoles } from '~/types'
+import { DataTableHeader } from 'vuetify'
+import UserRole from '~/components/auth/userRole.vue'
+import InviteUser from '~/components/auth/inviteUser.vue'
 import { successAlert } from '~/helpers'
+import { Domain, DomainValidator, User, UserRoles } from '~/types'
 
 type Data = {
   headers: DataTableHeader[]
   deleteDialogue: boolean
   validationRules: typeof DomainValidator
+  currentUserId?: string
 
   loading: boolean
   domain?: Domain
@@ -120,7 +125,12 @@ type Data = {
 
 export default {
   name: 'DomainEdit',
-  components: { UserRole, ValidationObserver, ValidationProvider },
+  components: {
+    UserRole,
+    InviteUser,
+    ValidationObserver,
+    ValidationProvider,
+  },
 
   data(): Data {
     return {
@@ -144,6 +154,7 @@ export default {
       ],
       deleteDialogue: false,
       validationRules: DomainValidator,
+      currentUserId: undefined,
 
       loading: true,
       domain: undefined,
@@ -171,6 +182,11 @@ export default {
         value: Object.values(UserRoles)[index],
       }))
     },
+  },
+
+  async mounted() {
+    const user = await Auth.currentAuthenticatedUser()
+    this.currentUserId = user.attributes.sub
   },
 
   methods: {

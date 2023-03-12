@@ -10,6 +10,7 @@
         outlined
         label
         :loading="loading"
+        :disabled="disabled"
         min-width="120"
         v-on="on"
       >
@@ -20,7 +21,7 @@
 
     <v-card :loading="loading">
       <v-card-title class="d-flex justify-center text-h5">
-        {{ $t(`domains.users.${deleteMode ? 'deleteRole' : 'editRole'}`) }}
+        {{ $t(`auth.${deleteMode ? 'deleteRole' : 'editRole'}`) }}
         <v-spacer />
         <v-btn icon class="error--text" @click="deleteMode = true">
           <v-icon>mdi-delete</v-icon>
@@ -46,6 +47,7 @@
         <v-btn
           :color="deleteMode ? 'error' : 'primary'"
           :loading="loading"
+          :disabled="disabled"
           @click="confirm"
         >
           {{ $t(deleteMode ? 'delete' : 'submit') }}
@@ -62,14 +64,7 @@
 
 <script lang="ts">
 import { PropOptions } from 'vue'
-import { UserRoles } from '~/types'
-
-const roleColors = {
-  [UserRoles.Admin]: 'red',
-  [UserRoles.Editor]: 'orange',
-  [UserRoles.Viewer]: 'blue',
-  [UserRoles.Nobody]: 'grey',
-}
+import { UserRoles, UserRoleColors } from '~/types'
 
 type Data = {
   show: boolean
@@ -92,6 +87,7 @@ export default {
     role: { type: String, default: UserRoles.Nobody } as PropOptions<UserRoles>,
     userId: { type: String, default: undefined },
     editable: { type: Boolean, default: false },
+    disabled: { type: Boolean, default: false },
   },
 
   data(): Data {
@@ -105,7 +101,7 @@ export default {
 
   computed: {
     color(): string {
-      return roleColors[this.role] || roleColors[UserRoles.Nobody]
+      return UserRoleColors[this.role] || UserRoleColors[UserRoles.Nobody]
     },
 
     userRoles() {
@@ -115,7 +111,7 @@ export default {
 
   methods: {
     getColor(role: UserRoles): string {
-      return roleColors[role] || roleColors[UserRoles.Nobody]
+      return UserRoleColors[role] || UserRoleColors[UserRoles.Nobody]
     },
 
     async confirm() {

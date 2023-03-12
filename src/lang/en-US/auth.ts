@@ -1,4 +1,7 @@
 export default {
+  users: 'Users',
+
+  // login
   login: 'Login',
   logout: 'Logout',
   register: 'Register',
@@ -7,6 +10,7 @@ export default {
   changePassword: 'Change Password',
   passwordChanged: 'Password updated',
   forgotPassword: 'Forgot Password',
+  resendCode: 'Resend code',
   codeSent: 'Confirmation code has been sent to your email address',
 
   // credentials
@@ -25,7 +29,7 @@ export default {
     uppercase: 'Password must contain an upper case letter',
     numbers: 'Password must contain a number',
     symbols: 'Password must contain a special character or a space',
-    whitespace: 'Password must not contain a leading or trailing space'
+    whitespace: 'Password must not contain a leading or trailing space',
   },
 
   // challenges
@@ -34,7 +38,7 @@ export default {
   challenge: {
     newPassword: 'Password change required',
     confirmEmail: 'Confirm email address',
-    softwareMfa: 'Enter code from your MFA app'
+    softwareMfa: 'Enter code from your MFA app',
   },
 
   // mfa
@@ -44,4 +48,11 @@ export default {
   disableMfa: 'Disable MFA Device',
   disableMfaConfirm: 'Are you sure you want to disable your MFA?',
   mfaScanCode: 'Scan code above using a TOTP app such as',
+
+  // roles
+  role: 'Role',
+  editRole: 'Edit Role',
+  deleteRole: 'Delete User Access',
+  invite: 'Invite User',
+  inviteSuccess: 'User invitation sent successfully',
 }
