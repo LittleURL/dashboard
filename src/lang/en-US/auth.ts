@@ -5,7 +5,7 @@ export default {
   login: 'Login',
   logout: 'Logout',
   register: 'Register',
-  nickname: 'Username',
+  nickname: 'Display Name',
   editProfile: 'Edit Profile',
   changePassword: 'Change Password',
   passwordChanged: 'Password updated',

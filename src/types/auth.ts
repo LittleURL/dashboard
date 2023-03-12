@@ -35,6 +35,7 @@ export type MFAMethods = 'TOTP' | 'SMS' | 'NOMFA' | 'SMS_MFA' | 'SOFTWARE_TOKEN_
 export class CognitoUserWithAttributes extends CognitoUser {
   attributes: {
     email: string
+    nickname: string
   }
 }
 
@@ -51,7 +52,7 @@ export const passwordPolicy = {
  * Validators
  */
 export const AuthValidator: Validator<User> = {
-  nickname: { required: true, min: 3, max: 32 },
+  nickname: { required: true, min: 3, max: 30 },
   email: { required: true, max: 255, email: true, confirmed: 'emailConfirm' },
   password: {
     required: true,

@@ -1,22 +1,56 @@
 <template>
-  <div>
+  <v-container>
     <!-- header -->
     <page-header :title="String($t('auth.editProfile'))" />
 
     <!-- email -->
-    <v-card class="mb-4" :loading="$fetchState.pending">
-      <v-card-text>
-        <v-form>
-          <v-text-field
-            v-model="email"
-            :label="$t('auth.email')"
-            :placeholder="user?.attributes.email"
-            required
-            outlined
-            disabled
-          />
-        </v-form>
-      </v-card-text>
+    <v-card class="mb-4" :loading="$fetchState.pending || loading">
+      <validation-observer ref="observer" v-slot="{ invalid }">
+        <!-- user attributes -->
+        <v-card-text>
+          <v-form>
+            <!-- email -->
+            <v-text-field
+              v-model="email"
+              :label="$t('auth.email')"
+              :placeholder="user?.attributes.email"
+              required
+              filled
+              disabled
+            />
+
+            <!-- nickname -->
+            <validation-provider
+              v-slot="{ errors, valid }"
+              :name="$t('auth.nickname')"
+              :rules="validationRules.nickname"
+            >
+              <v-text-field
+                v-model="nickname"
+                :counter="validationRules.nickname.max"
+                :required="validationRules.nickname.required"
+                :label="$t('auth.nickname')"
+                :error-messages="errors"
+                :success="valid"
+                outlined
+              />
+            </validation-provider>
+          </v-form>
+        </v-card-text>
+
+        <!-- form actions -->
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            color="primary"
+            :disabled="invalid"
+            :loading="loading"
+            @click="updateAttributes"
+          >
+            {{ $t('submit') }}
+          </v-btn>
+        </v-card-actions>
+      </validation-observer>
     </v-card>
 
     <!-- change password -->
@@ -40,8 +74,8 @@
                     :error-messages="errors"
                     :success="valid"
                     type="password"
-                    outlined
                     required
+                    outlined
                   />
                 </validation-provider>
               </v-col>
@@ -177,7 +211,7 @@
         @confirm="disableMfa"
       />
     </v-card>
-  </div>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -189,8 +223,10 @@ import { authErrorAlert, successAlert } from '~/helpers'
 import { AuthValidator, CognitoUserWithAttributes, MFAMethods } from '~/types'
 
 type Data = {
+  loading: boolean
   user?: CognitoUserWithAttributes
   email?: string
+  nickname?: string
 
   // change password
   oldPassword?: string
@@ -217,8 +253,10 @@ export default {
   },
 
   data: (): Data => ({
+    loading: false,
     user: undefined,
     email: undefined,
+    nickname: undefined,
 
     // change password
     oldPassword: undefined,
@@ -240,12 +278,22 @@ export default {
     // user attributes
     this.user = await Auth.currentAuthenticatedUser()
     this.email = this.user.attributes.email
+    this.nickname = this.user.attributes.nickname
 
     // other
     this.mfaMethod = await Auth.getPreferredMFA(this.user)
   },
 
   methods: {
+    async updateAttributes() {
+      this.loading = true
+      await Auth.updateUserAttributes(this.user, {
+        nickname: this.nickname,
+      })
+      await this.$fetch()
+      this.loading = false
+    },
+
     async changePassword() {
       this.changePasswordLoading = true
 
