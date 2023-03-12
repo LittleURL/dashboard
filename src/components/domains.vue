@@ -2,7 +2,7 @@
   <v-list class="py-0">
     <!-- actions -->
     <v-list-item>
-      <v-btn left text color="primary" tile>
+      <v-btn left text color="primary" tile to="/create">
         <v-icon>mdi-plus</v-icon>{{ $t('new') }}
       </v-btn>
       <v-spacer />
