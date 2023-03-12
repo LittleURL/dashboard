@@ -1,101 +1,111 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12" xl="6">
-        <v-card :loading="loading">
-          <v-card-title>
-            {{ domain?.domain }}
-            <v-spacer />
-            <user-role :role="domain?.user_role" />
-          </v-card-title>
+  <div>
+    <!-- header -->
+    <page-header
+      :title="String($t('domains.edit'))"
+      :back-text="String($t('domains.links'))"
+      :back-to="`/${$route.params.domainId}`"
+    />
 
-          <validation-observer ref="observer" v-slot="{ invalid }">
-            <v-card-text v-if="domain !== undefined">
-              <v-form @submit.prevent="submit">
-                <!-- Description -->
-                <validation-provider
-                  v-slot="{ errors, valid }"
-                  :name="$t('domains.description')"
-                  :rules="validationRules.description"
-                >
-                  <v-text-field
-                    v-model="domain.description"
-                    :counter="validationRules.description.max"
-                    :required="validationRules.description.required"
-                    :label="$t('domains.description')"
-                    :error-messages="errors"
-                    :success="valid"
-                  />
-                </validation-provider>
-
-                <!-- Default target -->
-                <validation-provider
-                  v-slot="{ errors, valid }"
-                  :name="$t('domains.defaultTarget')"
-                  :rules="validationRules.default_target"
-                >
-                  <v-text-field
-                    v-model="domain.default_target"
-                    :counter="validationRules.default_target.max"
-                    :required="validationRules.default_target.required"
-                    :label="$t('domains.defaultTarget')"
-                    :error-messages="errors"
-                    :success="valid"
-                  />
-                </validation-provider>
-              </v-form>
-            </v-card-text>
-
-            <!-- form actions -->
-            <v-card-actions>
+    <!-- content -->
+    <v-container>
+      <v-row>
+        <v-col cols="12" xl="6">
+          <v-card :loading="loading">
+            <v-card-title>
+              {{ domain?.domain }}
               <v-spacer />
-              <v-btn
-                color="primary"
-                :disabled="invalid"
-                :loading="loading"
-                @click="submit"
-              >
-                {{ $t('save') }}
-              </v-btn>
-            </v-card-actions>
-          </validation-observer>
-        </v-card>
-      </v-col>
+              <user-role :role="domain?.user_role" />
+            </v-card-title>
 
-      <v-col cols="12" xl="6">
-        <v-card :loading="loadingUsers">
-          <v-card-title>
-            {{ $t('auth.users') }}
-            <v-spacer />
-            <invite-user />
-          </v-card-title>
-          <v-list>
-            <!-- user name -->
-            <v-list-item v-for="user in users" :key="user.id">
-              <v-avatar size="32">
-                <v-img :src="user.picture" :alt="`@${user.nickname}`">
-                  <template #placeholder>
-                    <v-icon size="32">mdi-account</v-icon>
-                  </template>
-                </v-img>
-              </v-avatar>
-              <span class="subtitle-1 ml-2">{{ user.nickname }}</span>
+            <validation-observer ref="observer" v-slot="{ invalid }">
+              <v-card-text v-if="domain !== undefined">
+                <v-form @submit.prevent="submit">
+                  <!-- Description -->
+                  <validation-provider
+                    v-slot="{ errors, valid }"
+                    :name="$t('domains.description')"
+                    :rules="validationRules.description"
+                  >
+                    <v-text-field
+                      v-model="domain.description"
+                      :counter="validationRules.description.max"
+                      :required="validationRules.description.required"
+                      :label="$t('domains.description')"
+                      :error-messages="errors"
+                      :success="valid"
+                    />
+                  </validation-provider>
 
-              <!-- role -->
+                  <!-- Default target -->
+                  <validation-provider
+                    v-slot="{ errors, valid }"
+                    :name="$t('domains.defaultTarget')"
+                    :rules="validationRules.default_target"
+                  >
+                    <v-text-field
+                      v-model="domain.default_target"
+                      :counter="validationRules.default_target.max"
+                      :required="validationRules.default_target.required"
+                      :label="$t('domains.defaultTarget')"
+                      :error-messages="errors"
+                      :success="valid"
+                    />
+                  </validation-provider>
+                </v-form>
+              </v-card-text>
+
+              <!-- form actions -->
+              <v-card-actions>
+                <v-spacer />
+                <v-btn
+                  color="primary"
+                  :disabled="invalid"
+                  :loading="loading"
+                  @click="submit"
+                >
+                  {{ $t('save') }}
+                </v-btn>
+              </v-card-actions>
+            </validation-observer>
+          </v-card>
+        </v-col>
+
+        <v-col cols="12" xl="6">
+          <v-card :loading="loadingUsers">
+            <v-card-title>
+              {{ $t('auth.users') }}
               <v-spacer />
-              <user-role
-                :role="user.role"
-                :user-id="user.id"
-                :disabled="user.id === currentUserId"
-                editable
-                @edited="loadUsers"
-              />
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+              <invite-user />
+            </v-card-title>
+            <v-list>
+              <!-- user name -->
+              <v-list-item v-for="user in users" :key="user.id">
+                <v-avatar size="32">
+                  <v-img :src="user.picture" :alt="`@${user.nickname}`">
+                    <template #placeholder>
+                      <v-icon size="32">mdi-account</v-icon>
+                    </template>
+                  </v-img>
+                </v-avatar>
+                <span class="subtitle-1 ml-2">{{ user.nickname }}</span>
+
+                <!-- role -->
+                <v-spacer />
+                <user-role
+                  :role="user.role"
+                  :user-id="user.id"
+                  :disabled="user.id === currentUserId"
+                  editable
+                  @edited="loadUsers"
+                />
+              </v-list-item>
+            </v-list>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script lang="ts">

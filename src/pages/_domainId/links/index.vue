@@ -40,46 +40,50 @@
     </page-header>
 
     <!-- content -->
-    <v-card class="mx-auto mb-3 pb-0" outlined>
-      <v-data-table
-        :headers="headers"
-        :items="links"
-        :items-per-page.sync="perPage"
-        :loading="$fetchState.pending"
-        :sort-by.sync="sortBy"
-        :sort-desc.sync="sortDesc"
-        :footer-props="{ 'items-per-page-options': [10, 30, 50] }"
-      >
-        <!-- search  -->
-        <template #top>
-          <v-card-actions>
-            <v-text-field
-              v-model="prefix"
-              outlined
-              :label="$t('searchPrefix')"
-              clearable
-              autofocus
-              @change="$fetch"
-            />
-          </v-card-actions>
-        </template>
+    <v-container>
+      <v-card class="mx-auto mb-3 pb-0" outlined>
+        <v-data-table
+          :headers="headers"
+          :items="links"
+          :items-per-page.sync="perPage"
+          :loading="$fetchState.pending"
+          :sort-by.sync="sortBy"
+          :sort-desc.sync="sortDesc"
+          :footer-props="{ 'items-per-page-options': [10, 30, 50] }"
+        >
+          <!-- search  -->
+          <template #top>
+            <v-card-actions>
+              <v-text-field
+                v-model="prefix"
+                outlined
+                :label="$t('searchPrefix')"
+                clearable
+                autofocus
+                @change="$fetch"
+              />
+            </v-card-actions>
+          </template>
 
-        <!-- updated -->
-        <template #item.updated_at="{ item }">
-          <relative-timestamp :ts="item.updated_at" />
-        </template>
+          <!-- updated -->
+          <template #item.updated_at="{ item }">
+            <relative-timestamp :ts="item.updated_at" />
+          </template>
 
-        <!-- item actions -->
-        <template #item.actions="{ item }">
-          <NuxtLink :to="`/${$route.params.domainId}/links/${linkId(item)}/edit`">
-            <v-icon>mdi-pencil</v-icon>
-          </NuxtLink>
-          <v-icon @click="$refs.confirmDelete.open(item, item.uri)">
-            mdi-delete
-          </v-icon>
-        </template>
-      </v-data-table>
-    </v-card>
+          <!-- item actions -->
+          <template #item.actions="{ item }">
+            <NuxtLink
+              :to="`/${$route.params.domainId}/links/${linkId(item)}/edit`"
+            >
+              <v-icon>mdi-pencil</v-icon>
+            </NuxtLink>
+            <v-icon @click="$refs.confirmDelete.open(item, item.uri)">
+              mdi-delete
+            </v-icon>
+          </template>
+        </v-data-table>
+      </v-card>
+    </v-container>
 
     <!-- dialogues -->
     <delete-dialogue ref="confirmDelete" @confirm="deleteLink" />
@@ -170,7 +174,10 @@ export default {
 
       try {
         await this.$axios.$delete(`/domains/${domainId}/links/${linkId(link)}`)
-        this.$store.commit('addAlert', successAlert(this.$t('links.deleteSuccess')))
+        this.$store.commit(
+          'addAlert',
+          successAlert(this.$t('links.deleteSuccess'))
+        )
         this.$fetch()
       } finally {
         this.$refs.confirmDelete.close()
