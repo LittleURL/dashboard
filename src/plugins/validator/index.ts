@@ -2,6 +2,7 @@ import { Plugin } from '@nuxt/types'
 import { configure, extend } from 'vee-validate'
 import * as rules from 'vee-validate/dist/rules'
 import passwordValidator from './password'
+import notPrefixValidator from './notPrefix'
 
 const veeValidatePlugin: Plugin = ({ i18n }) => {
   // get messages from i18n
@@ -19,6 +20,7 @@ const veeValidatePlugin: Plugin = ({ i18n }) => {
 
   // custom rules
   extend('password', passwordValidator)
+  extend('notPrefix', notPrefixValidator)
 }
 
 export default veeValidatePlugin
