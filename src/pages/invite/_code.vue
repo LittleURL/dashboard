@@ -1,9 +1,47 @@
 <template>
-  <h3>{{ $route.params.code }}</h3>
+  <!-- content -->
+  <v-container>
+    <v-card :loading="loading">
+      <v-card-title>
+        {{ $t('auth.acceptInvite') }}
+      </v-card-title>
+    </v-card>
+  </v-container>
 </template>
 
-<script>
+<script lang="ts">
+import { successAlert } from '~/helpers'
+
+type Data = {
+  loading: boolean
+}
+
 export default {
   name: 'InviteAccept',
+  layout: 'auth',
+
+  data(): Data {
+    return {
+      loading: true,
+    }
+  },
+
+  fetchDelay: 500,
+  async fetch() {
+    this.loading = true
+
+    try {
+      const { code } = this.$route.params
+      await this.$axios.$get(`/invites/${code}`)
+    } catch (err) {
+      this.loading = false
+      return
+    }
+
+    // success
+    this.loading = false
+    this.$store.commit('addAlert', successAlert(this.$t('auth.inviteAccepted')))
+    await this.$router.push(`/`)
+  },
 }
 </script>

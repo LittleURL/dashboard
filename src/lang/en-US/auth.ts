@@ -55,4 +55,6 @@ export default {
   deleteRole: 'Delete User Access',
   invite: 'Invite User',
   inviteSuccess: 'User invitation sent successfully',
+  acceptInvite: 'Accept invite',
+  inviteAccepted: 'Invite accepted successfully',
 }

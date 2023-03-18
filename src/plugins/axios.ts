@@ -9,7 +9,7 @@ const axiosPlugin: Plugin = ({ $axios, store, i18n }) => {
     store.commit('addAlert', {
       type: AlertType.Error,
       text: i18n.t('apiError', {
-        code: res.code || err.code,
+        code: res.code || err.code || err.response.status,
         message: res.message,
       }),
       details: res.details,
