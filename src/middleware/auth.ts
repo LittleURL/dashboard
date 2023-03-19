@@ -1,17 +1,19 @@
+import { Middleware } from '@nuxt/types'
 import { Auth } from 'aws-amplify'
 
 const whitelistedRoutes = ['/login']
 
-export default async ({ redirect, route }) => {
-  if (!whitelistedRoutes.includes(route.fullPath)) {
+const authMiddleware: Middleware = async ({ redirect, route }) => {
+  if (!whitelistedRoutes.includes(route.path)) {
     try {
-      await Auth.currentSession()
+      const session = await Auth.currentSession()
+      if (!session.isValid()) {
+        throw new Error('Invalid session')
+      }
     } catch (err) {
-      return redirect('/login')
-    }
-
-    if (!(await Auth.currentSession()).isValid()) {
-      return redirect('/login')
+      return redirect(401, '/login', { r: encodeURIComponent(route.fullPath) })
     }
   }
 }
+
+export default authMiddleware

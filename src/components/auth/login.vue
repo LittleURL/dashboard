@@ -75,7 +75,8 @@ export default {
           return
         }
 
-        this.$router.push('/')
+        const redirectTo = this.$route.query.r ? decodeURIComponent(this.$route.query.r) : '/'
+        this.$router.push(redirectTo)
       } catch (err) {
         if (err.code === 'UserNotConfirmedException') {
           this.$emit('emailNotConfirmed', this.email)
