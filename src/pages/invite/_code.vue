@@ -33,15 +33,14 @@ export default {
     try {
       const { code } = this.$route.params
       await this.$axios.$get(`/invites/${code}`)
-    } catch (err) {
+      this.$store.commit(
+        'addAlert',
+        successAlert(this.$t('auth.inviteAccepted'))
+      )
+    } finally {
       this.loading = false
-      return
+      await this.$router.push(`/`)
     }
-
-    // success
-    this.loading = false
-    this.$store.commit('addAlert', successAlert(this.$t('auth.inviteAccepted')))
-    await this.$router.push(`/`)
   },
 }
 </script>
