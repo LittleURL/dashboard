@@ -43,13 +43,12 @@
     <v-container>
       <v-card class="mx-auto mb-3 pb-0" outlined>
         <v-data-table
-          :headers="headers"
-          :items="links"
-          :items-per-page.sync="perPage"
           :loading="$fetchState.pending"
-          :sort-by.sync="sortBy"
-          :sort-desc.sync="sortDesc"
+          :headers="tableHeaders"
+          :items="links"
+          :options.sync="tableOptions"
           :footer-props="{ 'items-per-page-options': [10, 30, 50] }"
+          :server-items-length="totalItems"
         >
           <!-- search  -->
           <template #top>
@@ -59,8 +58,8 @@
                 :label="$t('searchPrefix')"
                 clearable
                 autofocus
-                filled
                 outlined
+                prepend-inner-icon="mdi-magnify"
                 @change="$fetch"
               />
             </v-card-actions>
@@ -73,14 +72,21 @@
 
           <!-- item actions -->
           <template #item.actions="{ item }">
-            <NuxtLink
-              :to="`/${$route.params.domainId}/links/${linkId(item)}/edit`"
-            >
-              <v-icon>mdi-pencil</v-icon>
-            </NuxtLink>
-            <v-icon @click="$refs.confirmDelete.open(item, item.uri)">
-              mdi-delete
-            </v-icon>
+            <div align="right">
+              <NuxtLink
+                :to="`/${$route.params.domainId}/links/${linkId(item)}/edit`"
+              >
+                <v-icon>mdi-pencil</v-icon>
+              </NuxtLink>
+              <v-icon @click="$refs.confirmDelete.open(item, item.uri)">
+                mdi-delete
+              </v-icon>
+            </div>
+          </template>
+
+          <!-- pagination -->
+          <template #footer.page-text="{ pageStart, pageStop }">
+            {{ pageStart }}-{{ pageStop }}
           </template>
         </v-data-table>
       </v-card>
@@ -92,20 +98,25 @@
 </template>
 
 <script lang="ts">
-import { DataTableHeader } from 'vuetify'
+import { DataOptions, DataTableHeader } from 'vuetify'
 import DeleteDialogue from '~/components/deleteDialogue.vue'
 import PageHeader from '~/components/pageHeader.vue'
 import RelativeTimestamp from '~/components/relativeTimestamp.vue'
-import { linkId, successAlert } from '~/helpers'
+import { linkId, prefixString, successAlert } from '~/helpers'
 import { Domain, Link } from '~/types'
 
+type TableOptions = Omit<DataOptions, 'sortBy'> & {
+  sortBy: (keyof Link)[]
+}
+
 type Data = {
-  headers: DataTableHeader[]
+  tableHeaders: DataTableHeader[]
+  tableOptions: Partial<TableOptions>
   links: Link[]
-  prefix: string | undefined
-  sortBy: keyof Link
-  sortDesc: boolean
-  perPage: number
+  prefix?: string
+  paginationTokens: {
+    [page: number]: string
+  }
   deleteDialogue: boolean
 }
 
@@ -115,12 +126,12 @@ export default {
 
   data(): Data {
     return {
-      headers: [
+      tableHeaders: [
         {
           text: this.$t('links.uri') as string,
           value: 'uri',
           sortable: true,
-          align: 'start',
+          // align: 'start',
         },
         {
           text: this.$t('links.updatedAt') as string,
@@ -131,27 +142,61 @@ export default {
           text: this.$t('actions') as string,
           value: 'actions',
           sortable: false,
+          class: 'text-right',
         },
       ],
+      tableOptions: {
+        sortBy: ['uri'],
+        sortDesc: [false],
+        itemsPerPage: 10,
+        multiSort: false,
+        mustSort: true,
+      },
       links: [],
       prefix: undefined,
-      sortBy: 'uri',
-      sortDesc: false,
-      perPage: 10,
+      paginationTokens: {},
       deleteDialogue: false,
     }
   },
 
-  fetchDelay: 500,
+  fetchDelay: 100,
   async fetch() {
     const { domainId } = this.$route.params
-    this.links = await this.$axios.$get(`/domains/${domainId}/links`, {
+    const currentPage = this.tableOptions.page || 1
+
+    // load data from API
+    const res = await this.$axios.get(`/domains/${domainId}/links`, {
       params: {
-        ...(this.prefix && { prefix: encodeURIComponent(this.prefix) }),
-        ...(this.sortBy && { sortBy: this.sortBy }),
-        ...(this.sortDesc && { sortDesc: this.sortDesc }),
+        ...(this.prefix && {
+          prefix: encodeURIComponent(prefixString('/', this.prefix)),
+        }),
+        ...(this.tableOptions.sortBy && {
+          sortBy: this.tableOptions.sortBy[0],
+        }),
+        ...(this.tableOptions.sortDesc && {
+          sortDesc: this.tableOptions.sortDesc[0],
+        }),
+        ...(this.tableOptions.itemsPerPage && {
+          pageLimit: this.tableOptions.itemsPerPage,
+        }),
+      },
+      headers: {
+        ...(this.paginationTokens[currentPage] && {
+          'x-pagination-token': this.paginationTokens[currentPage],
+        }),
       },
     })
+
+    // set data
+    this.links = res.data
+    this.paginationTokens[currentPage + 1] = res.headers['x-pagination-token']
+
+    // cleanup tokens
+    for (const page of Object.keys(this.paginationTokens)) {
+      if (page > currentPage + 1) {
+        delete this.paginationTokens[page]
+      }
+    }
   },
 
   computed: {
@@ -159,11 +204,26 @@ export default {
       const { domainId } = this.$route.params
       return this.$store.getters['domains/current'](domainId)
     },
+
+    totalItems(): number {
+      const { page, itemsPerPage } = this.tableOptions
+      const total = page * itemsPerPage
+
+      if (this.links.length < itemsPerPage) {
+        return (total - itemsPerPage) + this.links.length
+      }
+
+      return total + itemsPerPage
+    }
   },
 
   watch: {
-    sortBy: '$fetch',
-    sortDesc: '$fetch',
+    tableOptions: {
+      handler() {
+        this.$fetch()
+      },
+      deep: true,
+    },
   },
 
   methods: {
