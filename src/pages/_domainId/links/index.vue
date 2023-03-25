@@ -47,7 +47,7 @@
           :headers="tableHeaders"
           :items="links"
           :options.sync="tableOptions"
-          :footer-props="{ 'items-per-page-options': [10, 30, 50] }"
+          :footer-props="tableFooterOptions"
           :server-items-length="totalItems"
         >
           <!-- search  -->
@@ -112,6 +112,7 @@ type TableOptions = Omit<DataOptions, 'sortBy'> & {
 type Data = {
   tableHeaders: DataTableHeader[]
   tableOptions: Partial<TableOptions>
+  tableFooterOptions: any
   links: Link[]
   prefix?: string
   paginationTokens: {
@@ -151,6 +152,11 @@ export default {
         itemsPerPage: 10,
         multiSort: false,
         mustSort: true,
+      },
+      tableFooterOptions: {
+        'items-per-page-options': [10, 30, 50],
+        'show-first-last-page': true,
+        'last-icon': ''
       },
       links: [],
       prefix: undefined,
@@ -210,11 +216,11 @@ export default {
       const total = page * itemsPerPage
 
       if (this.links.length < itemsPerPage) {
-        return (total - itemsPerPage) + this.links.length
+        return total - itemsPerPage + this.links.length
       }
 
       return total + itemsPerPage
-    }
+    },
   },
 
   watch: {
@@ -247,3 +253,10 @@ export default {
   },
 }
 </script>
+
+<style>
+/* hide "last page" button, since that doesn't work with token based pagination */
+.v-data-footer__icons-after > button:nth-last-child(1) {
+  display: none;
+}
+</style>
